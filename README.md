@@ -17,7 +17,8 @@
   </p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/Primary_Agents-01-blue" alt="Project Website">
+    <img src="https://img.shields.io/badge/Primary_Agents-01-red" alt="primary agents">
+    <img src="https://img.shields.io/badge/Sub_Agents-18-blue" alt="sub agents">
 
    
   <a href="https://www.linkedin.com/in/alimanjotho/">
