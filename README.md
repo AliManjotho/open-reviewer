@@ -137,7 +137,7 @@ cd OpenReviewer
 ## 🛠️ Installation
 ### 0. Install and configure <code>OpenCode</code>
 You must first install and configure OpenCode. Follow the instructions in <a href="./assets/opencode.pdf">opencode.pdf</a>
-<img src="./assets/logo-opencode.png" height="200" style="object-fit: contain;">
+<img src="./assets/logo-opencode.png" height="80" style="object-fit: contain;">
 
 ### 1. Create Environment
 ```
