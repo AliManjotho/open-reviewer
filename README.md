@@ -140,8 +140,9 @@ You must first install and configure OpenCode. Follow the instructions in <a hre
 <img src="./assets/logo-opencode.png" height="80" style="object-fit: contain;">
 
  -Download and Install curl by vising the following link:
-  ```https://curl.se/
-  ```
+```
+https://curl.se/
+```
 
 ### 1. Create Environment
 ```
