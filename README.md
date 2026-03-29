@@ -5,6 +5,8 @@
 
   <h2>OpenReviewer: Automated Multi-Agent System for Evidence-Driven Research Paper Review and Integrity Auditing</h2>
   <!-- <h4>🌟 🌟</h4> -->
+
+  <h4><i>The AI-powered pre-submission peer review layer for scientific research</i></h4>
   
   <br>
   
