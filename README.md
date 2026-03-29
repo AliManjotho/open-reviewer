@@ -43,3 +43,93 @@ It orchestrates a team of specialized AI agents to analyze manuscripts across **
 
 <br>
 
+## 📰 News
+- 🎉 **v1.0 Released**  
+  Initial release of OpenReviewer with:
+  - Multi-agent orchestration pipeline  
+  - Structured review generation  
+  - Citation integrity checks  
+  - Cross-section consistency validation  
+  - Scorecards and issue reports
+ 
+## 🧠 Architecture Overview
+- **Orchestrating Agent** controls the full pipeline  
+- Multiple **specialized sub-agents** handle domain-specific analysis  
+- Outputs include:
+  - Issue Reports
+  - Scorecards
+  - Final Structured Reviews 
+
+## 🤖 Agents
+
+### 🔴 Primary Agent
+
+| Agent Name | Description |
+|-----------|------------|
+| Orchestrating Agent | Controls workflow, dispatches sub-agents, aggregates outputs |
+
+
+
+### 🟣 Sub Agents
+
+| Sub Agent | Responsibility |
+|----------|--------------|
+| Paper Parser Agent | Extracts structured content from PDFs |
+| Metadata Agent | Extracts authors, affiliations, references |
+| Language Quality Agent | Grammar, spelling, readability |
+| Abstract Agent | Abstract validation |
+| Structure Agent | Section organization analysis |
+| Related Work Agent | Literature relevance and correctness |
+| Novelty Agent | Contribution and novelty assessment |
+| Methods Agent | Methodology validation |
+| Math & Symbol Agent | Equation and symbol consistency |
+| Experiments Agent | Experimental setup validation |
+| Results Claims Agent | Results correctness and claim validation |
+| Discussion Agent | Interpretation and limitation checks |
+| Figures & Tables Agent | Visual and caption validation |
+| References Agent | Reference validation |
+| Citation Ethics Agent | Citation bias, retractions, PubPeer checks |
+| Consistency Agent | Cross-section consistency |
+| Critique Agent | Weakness detection |
+| Meta Review Agent | Final synthesis |
+
+
+
+## 🧩 Skills
+
+| Skill Category | Skills |
+|---------------|-------|
+| Data Extraction & Grounding | paper-ingest-pdf, evidence-anchoring, anti-hallucination-grounding |
+| Writing & Structure | language-quality-review, abstract-validation, structure-organization-review |
+| Literature & Novelty | related-work-validation, novelty-contribution-assessment |
+| Technical & Mathematical | methodology-technical-review, math-symbol-consistency |
+| Experimental Validation | experimental-rigor-review, results-claims-verification |
+| Interpretation | discussion-limitations-review |
+| Visual & Data Checks | figure-table-deep-check |
+| References & Ethics | reference-integrity-check, citation-ethics-screen |
+| Global Consistency | cross-section-consistency |
+| Reporting & Scoring | issue-normalization, severity-scoring, meta-review-synthesis |
+
+
+
+## ⚙️ Commands
+
+| Command | Description |
+|--------|------------|
+| `/review-paper` | Review a single paper using full pipeline |
+| `/batch-review` | Review multiple papers and generate summary |
+| `/audit-paper` | Perform strict integrity and fraud detection audit |
+| `/compare-papers` | Compare multiple papers and rank them |
+| `/refresh-parsed` | Re-parse PDFs and update structured data |
+
+
+
+## ⚡ Quick Start
+
+```bash
+# Clone repository
+git clone https://github.com/your-username/OpenReviewer.git
+
+# Navigate to project
+cd OpenReviewer
+🛠️ Installation
