@@ -19,6 +19,7 @@
 <p align="center">
     <img src="https://img.shields.io/badge/Primary_Agents-01-red" alt="primary agents">
     <img src="https://img.shields.io/badge/Sub_Agents-18-blue" alt="sub agents">
+    <img src="https://img.shields.io/badge/Skills-22-orange" alt="skills">
 
    
   <a href="https://www.linkedin.com/in/alimanjotho/">
