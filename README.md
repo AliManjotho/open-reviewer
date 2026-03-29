@@ -139,6 +139,10 @@ cd OpenReviewer
 You must first install and configure OpenCode. Follow the instructions in <a href="./assets/opencode.pdf">opencode.pdf</a>
 <img src="./assets/logo-opencode.png" height="80" style="object-fit: contain;">
 
+ -Download and Install curl by vising the following link:
+  ```https://curl.se/
+  ```
+
 ### 1. Create Environment
 ```
 python -m venv venv
