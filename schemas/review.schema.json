@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PaperReview",
+  "type": "object",
+  "required": [
+    "paper_id",
+    "metadata",
+    "section_reviews",
+    "issues",
+    "scorecard",
+    "red_flags",
+    "strengths",
+    "weaknesses",
+    "questions_for_authors",
+    "recommendation",
+    "confidence"
+  ]
+}

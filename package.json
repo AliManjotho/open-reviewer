@@ -1,0 +1,19 @@
+{
+  "name": "paper-review-opencode",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Production-oriented OpenCode multi-agent research paper review pipeline",
+  "scripts": {
+    "review": "tsx src/cli/review.ts",
+    "batch": "tsx src/cli/batch.ts",
+    "compare": "tsx src/cli/compare.ts",
+    "refresh-parsed": "tsx src/cli/refresh_parsed.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  }
+}

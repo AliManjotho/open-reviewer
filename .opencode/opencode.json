@@ -1,0 +1,108 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "paper-review-orchestrator": {
+      "description": "Primary coordinator for deep multi-dimensional paper review",
+      "prompt_file": ".opencode/agents/paper-review-orchestrator.md"
+    },
+    "paper-parser": {
+      "description": "Normalizes parsed paper structure and evidence spans",
+      "prompt_file": ".opencode/agents/paper-parser.md"
+    },
+    "metadata-agent": {
+      "description": "Extracts and validates top-level paper metadata and identifiers",
+      "prompt_file": ".opencode/agents/metadata-agent.md"
+    },
+    "language-quality-agent": {
+      "description": "Audits language, grammar, abbreviations, and writing consistency",
+      "prompt_file": ".opencode/agents/language-quality-agent.md"
+    },
+    "abstract-agent": {
+      "description": "Validates abstract completeness, length, and consistency",
+      "prompt_file": ".opencode/agents/abstract-agent.md"
+    },
+    "structure-agent": {
+      "description": "Checks paper structure, section order, and organization",
+      "prompt_file": ".opencode/agents/structure-agent.md"
+    },
+    "related-work-agent": {
+      "description": "Assesses related work accuracy, relevance, and gap framing",
+      "prompt_file": ".opencode/agents/related-work-agent.md"
+    },
+    "novelty-agent": {
+      "description": "Assesses contribution distinctness and novelty claims",
+      "prompt_file": ".opencode/agents/novelty-agent.md"
+    },
+    "methods-agent": {
+      "description": "Evaluates methodology, technical design, and assumptions",
+      "prompt_file": ".opencode/agents/methods-agent.md"
+    },
+    "math-symbol-agent": {
+      "description": "Validates equations, notation, and symbol consistency",
+      "prompt_file": ".opencode/agents/math-symbol-agent.md"
+    },
+    "experiments-agent": {
+      "description": "Audits experimental setup, datasets, baselines, metrics, and fairness",
+      "prompt_file": ".opencode/agents/experiments-agent.md"
+    },
+    "results-claims-agent": {
+      "description": "Checks whether results support claims and identifies red flags",
+      "prompt_file": ".opencode/agents/results-claims-agent.md"
+    },
+    "discussion-agent": {
+      "description": "Audits interpretation quality, limitations, and overclaiming in discussion",
+      "prompt_file": ".opencode/agents/discussion-agent.md"
+    },
+    "figures-tables-agent": {
+      "description": "Checks captions, references, and image/table quality alignment",
+      "prompt_file": ".opencode/agents/figures-tables-agent.md"
+    },
+    "references-agent": {
+      "description": "Validates reference metadata and citation/reference alignment",
+      "prompt_file": ".opencode/agents/references-agent.md"
+    },
+    "citation-ethics-agent": {
+      "description": "Screens self-citations, suspicious citation patterns, and risk signals",
+      "prompt_file": ".opencode/agents/citation-ethics-agent.md"
+    },
+    "consistency-agent": {
+      "description": "Runs cross-section consistency checks and contradiction detection",
+      "prompt_file": ".opencode/agents/consistency-agent.md"
+    },
+    "critique-agent": {
+      "description": "Synthesizes strengths, weaknesses, issue prioritization, and author questions",
+      "prompt_file": ".opencode/agents/critique-agent.md"
+    },
+    "meta-review-agent": {
+      "description": "Produces final scorecard, confidence, red flags, and recommendation",
+      "prompt_file": ".opencode/agents/meta-review-agent.md"
+    }
+  },
+  "command": {
+    "review-paper": {
+      "description": "Run a full production review on one paper",
+      "agent": "paper-review-orchestrator",
+      "template": "Review one paper from papers/raw/ or a provided PDF path. Run the full pipeline, write normalized artifacts, generate structured issues, scorecard, markdown, html, and json review reports."
+    },
+    "batch-review": {
+      "description": "Review all papers in papers/raw/",
+      "agent": "paper-review-orchestrator",
+      "template": "Run the full production review pipeline on every paper in papers/raw/. Write one report per paper plus a portfolio summary."
+    },
+    "audit-paper": {
+      "description": "Run a strict audit emphasizing integrity, risk, and contradictions",
+      "agent": "paper-review-orchestrator",
+      "template": "Run a strict audit on a single paper with extra focus on references, citation ethics, results-claims verification, and cross-section contradictions."
+    },
+    "compare-papers": {
+      "description": "Compare completed review outputs across papers",
+      "agent": "paper-review-orchestrator",
+      "template": "Compare reviewed papers in reviews/json/."
+    },
+    "refresh-parsed": {
+      "description": "Regenerate parsed paper artifacts from source PDFs",
+      "agent": "paper-review-orchestrator",
+      "template": "For one or more papers, regenerate parsed and enriched artifacts without running the full review."
+    }
+  }
+}

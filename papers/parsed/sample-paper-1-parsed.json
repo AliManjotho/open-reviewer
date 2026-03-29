@@ -1,0 +1,464 @@
+{
+  "metadata": {
+    "manuscript_number": "APIN-D-24-10483",
+    "journal": "Applied Intelligence",
+    "article_type": "Original Submission",
+    "submission_date": "2024",
+    "parse_confidence": "high",
+    "parse_method": "PyPDF2 text extraction",
+    "total_pages": 40
+  },
+  "title": {
+    "full": "Enhancing human-robot interaction safety: Integrated neural network models for accurate facial expression detection in intelligent meal-assisting robotics",
+    "confidence": "high"
+  },
+  "authors": [
+    {
+      "name": "Yuhe Fan",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "email": "17852833762@163.com",
+      "order": 1
+    },
+    {
+      "name": "Lixun Zhang",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "email": "zhanglixun@hrbeu.edu.cn",
+      "order": 2,
+      "corresponding": true
+    },
+    {
+      "name": "Zhenhan Wang",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "order": 3
+    },
+    {
+      "name": "Zekun Yang",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "order": 4
+    },
+    {
+      "name": "Huaiyu Che",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "order": 5
+    },
+    {
+      "name": "Feng Xue",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "order": 6
+    },
+    {
+      "name": "Canxing Zheng",
+      "affiliation": "Weifang People's Hospital, Weifang City, Shandong Province, China",
+      "order": 7
+    },
+    {
+      "name": "Keyi Wang",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "order": 8
+    },
+    {
+      "name": "Xingyuan Wang",
+      "affiliation": "College of Mechanical and Electrical Engineering, Harbin Engineering University",
+      "order": 9
+    }
+  ],
+  "abstract": {
+    "content": "Real-time and accurate facial dysphagia intensity classification is critical for enhancing safety and effectiveness in human-robot interaction (HRI), especially within the context of intelligent meal-assisting robotics. Traditional single deep neural network models, however, often struggle to capture subtle facial changes and sequential information, leading to inaccuracies in hierarchical dysphagia intensity classification. To address these challenges, this paper proposes an advanced Integrated Neural Network Model (INNM) designed for real-time detection of dysphagia intensity levels from facial video frames. The INNM architecture comprises two key components: a feature extraction network and a converged CNN-ConvBiLSTM network. In the feature extraction stage, we enhance the YOLOv8s-cls architecture with deformable convolutions to better capture fine spatial details of facial expressions. This enhancement allows for more precise identification of subtle facial cues. Additionally, the CloFormer attention mechanism is integrated to effectively perceive both local high-frequency and global low-frequency information, thereby improving the model's sensitivity to nuanced facial changes. In the converged CNN-ConvBiLSTM network, we propose a novel algorithm that combines a three-layer hybrid CNN with ConvBiLSTM, employing a jumping-connection strategy. This approach significantly strengthens the model's ability to handle long-term and short-term temporal sequences, while also enhancing its capacity to integrate and interact with spatial information. The jumping connections improve the memorization ability of the model, making it more robust in processing complex time-series data. Extensive experiments demonstrate that the INNM outperforms baseline models and current state-of-the-art methods in dysphagia intensity classification, achieving remarkable accuracy. Ablation studies further validate the effectiveness of each component enhancement, confirming the model's superior performance. This research not only advances the application of AI in facial expression analysis but also provides essential technical support for ensuring safe and effective HRI in intelligent meal-assisting robots. By integrating sophisticated neural network models with real-time facial expression detection, our work contributes to the development of smarter, safer robotic systems that can significantly enhance user experience and safety in everyday applications.",
+    "confidence": "high",
+    "keywords": [
+      "Intelligent meal-assisting robotics",
+      "human-robot interaction",
+      "facial expression analysis",
+      "dysphagia intensity",
+      "integrated neural network model"
+    ]
+  },
+  "sections": [
+    {
+      "id": "1",
+      "title": "Introduction",
+      "content": "As an emerging service robot, intelligent meal-assisting robotics primarily consists of mechanical structure module, servo drive module, computer vision module, and communication module [1, 2]. The computer vision module is responsible for accurately recognizing and locating mouth and meal, transmitting relevant information to the servo drive module via the communication module. Subsequently, the servo drive module controls the movement of the robotic arm to facilitate food fetching and delivery functions. Facial dysphagia intensity classification is an important technology for ensuring the safety of human-robot interaction, particularly during the meal delivery phase of meal-assisting robotics. During the meal delivery process, when diners exhibit normal facial expressions, the robotic arm operates stably according to predetermined program. However, if diner displays slight dysphagia expression, the arm will automatically return to initial position; in cases of moderate or severe dysphagia expressions, the arm will immediately halt all movements. Therefore, real-time monitoring facial dysphagia intensity of diners is essential to enhance the safety of human-robot interactions in these robotic systems. Video-fluoroscopic swallowing examination [3], water drinking tests [4], and voice analysis methods [5, 6] have shown some utility in dysphagia classification. However, these methods have significant limitations in practical applications. The monitoring and identification techniques are often influenced by subjective judgment of humans, making it challenging to ensure objectivity and continuous real-time monitoring. This limitation significantly hampers the popularity and practicality of these methods. For instance, video-fluoroscopic swallowing examinations and water drinking tests require diagnosis by medical professionals, which complicates the ability to provide real-time monitoring for patients at home. Although voice analysis methods offer notable advantages in reducing human error, its accuracy can be affected by various factors, including environmental noise, patient positioning, and microphone placement. Furthermore, the applicability of voice analysis technology is not universal for all types of swallowing disorders. For patients who produce little or no sound during swallowing, the effectiveness of voice analysis methods may face considerable challenges, thereby limiting its clinical diagnostic scope. In addition, the main service targets of intelligent meal-assisting robots are elderly people with upper-limb physical disabilities [7-10]. However, due to the sudden and unpredictable nature of dysphagia, which poses a potential hazard to the safety of human-robot interaction during the feeding process of meal-assisting robots [11, 12]. Therefore, the development of a classification system capable of real-time and accurate monitoring of dysphagia intensity is essential to ensure the safety of individual patients and enhance human-robot interactions. As computer vision and deep learning technologies progress rapidly, facial expression analysis has demonstrated unrivaled potential in the areas of emotion recognition, medical diagnosis, and human-robot interaction of robots [13-15]. As a complex, emerging, and important research in the field of facial expression analysis, facial dysphagia classification technology is increasingly highlighting its great development potential and application prospects. In recent years, convolutional neural networks (CNNs) have been rapidly developed and widely used for face and object detection and recognition [16, 17]. YOLOv8 [18] belongs to the latest versions of the YOLO (You Only Look Once) [19] series of target detection models. It takes on the end-to-end real-time detection capability of the YOLO series of models and simultaneously makes optimizations in terms of accuracy and speed. YOLOv8 is based on the architecture of convolutional neural networks (CNNs), which utilizes the feature extraction capabilities of CNNs to recognize target objects in images [20]. Deep neural networks with CNN architectures can leverage the significant benefits of feature extraction from still images. However, it is difficult to analyze sequential data such as voice or video data with the single deep neural network models, making it difficult to accurately detect facial dysphagia intensity. Recurrent neural networks (RNNs) can compensate for the shortcomings of CNNs in terms of time series and are capable of updating the representation with past information [21]. However, RNNs are inclined to encounter the problem of gradient vanishing or gradient explosion during the processes of training and testing, which restricts the ability of RNNs to handle long sequences. As a new variant of RNN, bidirectional long short-term memory networks (BiLSTM) [22] can represent each sequence in both forward and backward directions through two independent hidden states, thereby capturing past and future information respectively. Given the superior ability of convolutional neural networks in spatial feature extraction and the significant advantages of recurrent neural networks in processing time-series data, in recent years, integrated methods that incorporate these two networks have shown unprecedented potential and advantages in the field of facial expression analysis, particularly in the field of pain detection [23, 24]. Rodriguez et al. [25] put forward a method to combine CNN and RNN. This method extracts features from the pre-trained CNN network and then transfers this feature information to the RNN network for pain detection in facial expressions. References [26, 27] further advanced this concept by extracting facial features from the pre-trained VGGFaces model and subsequently integrating them into the LSTM to utilize the temporal dependencies among video frames for the pain detection of facial expressions. Ding and Tao [28] put forward an integrated CNN model which is applied to face recognition based on video sequences and surpasses previous methods like Deep Face [29], DeepID2+ [17], and VGG Face2 [30] in performance. According to the literature [31], the optimal design of the integrated neural network can be accomplished by adjusting initial weights, network topology, and the composition of the training dataset, with the aim of maximizing the performance of models. By integrating the decisions of multiple neural networks, integrated models can significantly reduce the expected error compared to the single deep neural networks, thus demonstrating more robust generalization capabilities and better accuracy. Although integrated models of CNNs and RNNs have demonstrated remarkable potential in several domains of facial expression analysis, they have relatively lower accuracy in the classification of dysphagia intensity in facial expressions. Moreover, relatively little research has been carried out on integrated models employing end-to-end architectures. In addition, deformable convolution [32, 33] and the CloFormer attention mechanism [34] shows significant potential for enhancing model robustness and generalization. Deformable convolution allows the sampling locations of the convolution kernel to dynamically adjust perceptual field at each location based on the inputs, which allows models to better handle changes in shape, viewpoint, and scale of the facial region. CloFormer captures local high-frequency information through convolutional layers while capturing global low-frequency information through the self-attention mechanism, which allows models to perceive both local and global contextual information. In this work, we put forward a novel integrated neural network model (INNM) with an end-to-end architecture for automatically detecting dysphagia intensity levels from facial video frames.",
+      "subsections": [],
+      "confidence": "high"
+    },
+    {
+      "id": "2",
+      "title": "Proposed methods",
+      "content": "The innovative highlight of this study is that an integrated neural network model (INNM) was proposed for multiple categorizations (four classes) of dysphagia intensity from facial expression video frame sequences. As shown in Fig. 1, it presents the block diagram of the INNM model proposed in this paper. Before inputting video frame data into the model, we preprocess and normalize the frame images in dataset. The proposed INNM model mainly comprises two parts: the feature extraction network (Fusion 1) and the converged CNN-ConvBiLSTM network (Fusion 2). In the feature extraction network, an improved combination of the YOLOv8s-cls and CloFormer attention mechanism was used to extract facial features. Then, the proposed facial feature information is passed to the converged CNN-ConvBiLSTM network for multiple classifications of facial dysphagia intensity. In the converged CNN-ConvBiLSTM network, we develop an architecture that merges three-stream hybrid CNN and convolutional BiLSTM network and employ the jumping-connection strategy to converge the outputs for quadruple categorization of facial dysphagia intensities.",
+      "subsections": [
+        {
+          "id": "2.1",
+          "title": "Pre-processing",
+          "content": "In the captured facial dysphagia dataset, the differences in external light intensity and the diversity of head orientations resulted in visual differences in image frames. These factors increase the complexity of accurately recognizing facial expression categories, especially for complex facial dysphagia expressions. Therefore, we performed image pre-processing and normalization on each image frame in dataset to augment the detection performance of models. Specifically, we first employ the advanced DCGW-YOLOv8n-seg algorithm [11], a face detection algorithm with excellent performance in noisy images, to localize face region in each frame image. Subsequently, the detected face regions are cropped and centered to eliminate background interference and to ensure the consistent position of face images. Following, all pre-processed images were resized to 224×224 pixels size while maintaining 3-channel color information to accommodate the input requirements of the feature extraction network. This is because the 224×224×3-pixel input size is widely used in most deep neural network models including YOLOv8s-cls and VGG. Finally, the pre-processed image data is normalized. The normalization process involves converting the image data type from integer to floating point and then dividing the pixel value of the image by the maximum value, thus scaling the pixel value to the interval range [0, 1]. Normalization can be described as follows [23, 24]: x_d = x / x_max (1)",
+          "confidence": "high"
+        },
+        {
+          "id": "2.2",
+          "title": "Proposed feature extraction network architecture",
+          "content": "During the design process of the proposed integrated INNM model, the architecture part of the feature extraction network (Fusion 1) is designed first, as depicted in Fig. 2. The main role of the feature extraction network is to extract crucial feature information from each frame of the pre-processed image, which is then passed to the subsequent converged CNN-ConvBiLSTM network for further processing. For the purpose of strengthening the feature extraction ability of networks, we combine the improved YOLOv8s-cls network with the CloFormer attention mechanism. In particular, we take YOLOv8s-cls as the baseline model for feature extraction. By introducing deformable convolutions to replace traditional convolutions, we aim to improve the model's ability to capture fine spatial information of face images. Simultaneously, the CloFormer attention mechanism was introduced to enhance the models' capacity to perceive local high-frequency information and global low-frequency information within the feature map. This design approach, through integrating deformable convolution in the YOLOv8s-cls network, allows the model to capture subtle changes in facial features more precisely. Meanwhile, the introduction of the CloFormer attention mechanism augments the ability of models to perceive local and global contextual information in the feature map. In backbone network of the YOLOv8s-cls model, the convolutional layer of C2f module adopts traditional convolutional network, whose convolution kernel performs convolution operations using fixed sampling points. However, this convolution based on a grid of fixed sampling points has limitations in processing video frame images, especially in capturing complex and subtle spatial variations in facial regions, such as changes in shape, viewpoint, and scale. Thus, we introduce deformable convolutions to take the place of traditional convolutions in the C2f module, as illustrated in Fig. 3. The key advantage of deformable convolution lies in enabling the sampling positions of the convolution kernel to be dynamically adjusted according to the input data, so as to adaptively change the receptive field at each position. As a result, this enhances the ability to capture fine-grained spatial information, as depicted in Fig. 4. The CloFormer, as a new variant of the Transformer module, incorporates local and global attention mechanisms to enhance context awareness and enable efficient aggregation of local information [34]. As depicted in Fig. 5, the structure of CloFormer consists of two parts: the Clo block module and the convolutional feedforward network (ConvFFN module), aiming to enhance computational efficiency and model performance.",
+          "confidence": "high"
+        },
+        {
+          "id": "2.3",
+          "title": "Proposed converged CNN-ConvBiLSTM network",
+          "content": "In Fig. 2, the orange region represents the converged convolutional neural network (CNN) with convolutional bidirectional long short-term memory network (ConvBiLSTM) architecture (converged CNN-ConvBiLSTM network) in the INNM model. This is utilized to output the multiple classifications of facial dysphagia intensity levels after the feature extraction network. Integrated learning, as a state-of-the-art strategy, significantly enhances the generalization ability of the classifier by combining the predictions of multiple models, thus demonstrating superior performance when dealing with complex datasets. Since the facial dysphagia data are video frame images, the inherent temporal characteristics demand that we employ a neural network architecture capable of efficiently processing sequential data. RNNs and their variants are a natural choice. However, RNN is susceptible to gradient explosion or gradient vanishing during training and testing, which limits its performance on long sequence data. Given this situation, in this research, we give priority to using the LSTM network, an improved version of RNN that overcomes the aforementioned deficiencies. Fig. 6 depicts in detail the structure of the LSTM module, which centers on three gating mechanisms (forgetting gates, input gates, and output gates) to regulate the information flow [35, 36]. The LSTM equations: i_t = σ(W_xi*x_t + W_hi*h_{t-1} + W_ci*c_{t-1} + b_i) (2); f_t = σ(W_xf*x_t + W_hf*h_{t-1} + W_cf*c_{t-1} + b_f) (3); c_t = f_t*c_{t-1} + i_t*tanh(W_xc*x_t + w_hc*h_{t-1} + b_c) (4); o_t = σ(W_xo*x_t + W_ho*h_{t-1} + W_co*c_t + b_o) (5); h_t = o_t*tanh(c_t) (6)",
+          "confidence": "high"
+        },
+        {
+          "id": "2.4",
+          "title": "INNM algorithm design",
+          "content": "Algorithm 1: The proposed INNM algorithm. Input: n RGB frame images, I1, I2,…, In. Output: The class of dysphagia intensity. The algorithm processes 20 frames per sequence and outputs four categories: 0=Moderate, 1=Normal, 2=Severe, and 3=Slight.",
+          "confidence": "high"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "3",
+      "title": "Experiments and assessment metrics",
+      "content": "This section describes the experimental setup, data acquisition, experiment details, and evaluation metrics used to validate the INNM model.",
+      "subsections": [
+        {
+          "id": "3.1",
+          "title": "Experimental setup",
+          "content": "Fig. 7 presents the comprehensive structure of the meal-assisting robot. The robot uses RealSense D435i (global acquisition camera, 848×480 resolution) and RealSense D405 (local camera, 848×480 resolution) from Intel Corporation, USA.",
+          "confidence": "high"
+        },
+        {
+          "id": "3.2",
+          "title": "Data acquisition",
+          "content": "32 teachers and students participated in experiments, each performing three capture experiments with four intensity levels: Normal, Slight, Moderate, and Severe. Total of 384 video sequences extracted into 193,144 frame images. After balancing: 71,542 frames split 8:1:1 (training:validation:test). Table 1 shows sample distribution.",
+          "confidence": "high"
+        },
+        {
+          "id": "3.3",
+          "title": "Experiment details",
+          "content": "Windows 10, PyTorch framework, Intel Xeon Platinum-8124P CPU, NVIDIA GeForce RTX 4080 GPU. Batch size: 16, epochs: 100, image resolution: 224×224, sequence length: 20. Learning rate: 0.001 (cyclic up to 0.2), weight decay: 0.0005, SGD optimizer with momentum 0.93.",
+          "confidence": "high",
+          "subsubsections": [
+            {
+              "id": "3.3.1",
+              "title": "Comparison experiments with baseline",
+              "content": "YOLOv8s-cls selected as single deep neural network baseline.",
+              "confidence": "high"
+            },
+            {
+              "id": "3.3.2",
+              "title": "Comparison experiments with advanced models",
+              "content": "Compared with YOLOv3, YOLOv5, YOLOv6, YOLOv8, and integrated models (Rodriguez, Bellantonio, Mohammad, Ghazal).",
+              "confidence": "high"
+            },
+            {
+              "id": "3.3.3",
+              "title": "Experiments for ablation analysis",
+              "content": "Ablation experiments on deformable convolution, CloFormer attention mechanism, branching layers, and jumping-connection strategy.",
+              "confidence": "high"
+            }
+          ]
+        },
+        {
+          "id": "3.4",
+          "title": "Evaluation metrics",
+          "content": "Parameters: N_params = (I×(k×k)×O)+O (7); FLOPs = H×W×N_params (8); Accuracy = (TP+TN)/(TP+TN+FP+FN) (9); Precision = TP/(TP+FP) (10); Recall = TP/(TP+FN) (11); Fscore = 2×P×R/(P+R) (12); FPS = 1/ITPF (13)",
+          "confidence": "high"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "4",
+      "title": "Results and discussion",
+      "content": "This section presents experimental results comparing INNM with baseline and state-of-the-art models, along with ablation study findings.",
+      "subsections": [
+        {
+          "id": "4.1",
+          "title": "Comparison to baseline models",
+          "content": "INNM achieves 77.91% accuracy vs 40.68% baseline, 37.23% improvement. F-score: 77.62% vs 36.19% baseline. Params: 10.00M, FLOPs: 13.0G, FPS: 104.2.",
+          "confidence": "high"
+        },
+        {
+          "id": "4.2",
+          "title": "Comparison to SOTA models",
+          "content": "Table 3 shows INNM outperforms all compared models. Accuracy 77.91% vs best SOTA 70.86% (Ghazal). F-score improvements across all categories.",
+          "confidence": "high"
+        },
+        {
+          "id": "4.3",
+          "title": "Ablation experiment results",
+          "content": "Tables 4-7 demonstrate effectiveness of each component: deformable convolution (+2.78%), CloFormer (+31.93%), three-layer CNN-ConvBiLSTM, jumping-connection strategy.",
+          "confidence": "high"
+        },
+        {
+          "id": "4.4",
+          "title": "Limitations",
+          "content": "INNM model has relatively high number of parameters. Future work will explore new modules or optimization to reduce parameters.",
+          "confidence": "high"
+        }
+      ],
+      "confidence": "high"
+    },
+    {
+      "id": "5",
+      "title": "Conclusions",
+      "content": "This study proposes an Integrated Neural Network Model (INNM) for detecting dysphagia intensity levels from facial video frames. The INNM architecture consists of two main components: a feature extraction network and a converged CNN-ConvBiLSTM network. Compared to single neural network models, INNM improved accuracy by 37.23% and F-score by 41.43%. Relative to SOTA integrated models, INNM achieved improvements in accuracy ranging from 7.05% to 35.54%. This research provides critical technical support for ensuring safety in HRI applications of intelligent meal-assisting robots.",
+      "confidence": "high"
+    }
+  ],
+  "figures": [
+    {
+      "id": "Fig. 1",
+      "title": "Block diagram of the proposed integrated neural network model (INNM) for detecting multiple categories of dysphagia intensity from facial expressions",
+      "page": 6,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 2",
+      "title": "The architecture of the proposed integrated INNM model: the INNM model primarily consists of two components, the proposed feature extraction network (Fusion 1) and the proposed converged CNN-ConvBiLSTM network (Fusion 2)",
+      "page": 8,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 3",
+      "title": "(a) C2f module and (b) DCNC2f module",
+      "page": 9,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 4",
+      "title": "Schematic structure of deformable convolution",
+      "page": 9,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 5",
+      "title": "CloFormer attention: (a) the Clo block module, (b) the ConvFFN module",
+      "page": 10,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 6",
+      "title": "Schematic structure of the LSTM unit",
+      "page": 10,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 7",
+      "title": "Experimental setup: (a) a model of the meal-assisting robot, (b) a 3D CAD illustration of the experimental layout, (c) a frontal perspective of the experimental setup, and (d) parts of the end-effector used in this experiment",
+      "page": 14,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 8",
+      "title": "Sample frames in the dataset of facial dysphagia intensity",
+      "page": 15,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 9",
+      "title": "Comparison results between the proposed integrated neural network model (INNM) and the baseline model during the training process: (a) classification loss and (b) accuracy",
+      "page": 21,
+      "confidence": "high"
+    },
+    {
+      "id": "Fig. 10",
+      "title": "The results of confusion matrices obtained by models in the test set of facial dysphagia intensity",
+      "page": 22,
+      "confidence": "high"
+    }
+  ],
+  "tables": [
+    {
+      "id": "Table 1",
+      "title": "Number of samples in the dysphagia intensity dataset",
+      "page": 16,
+      "columns": ["Subset name", "Dysphagia intensity classes", "Number of samples"],
+      "confidence": "high"
+    },
+    {
+      "id": "Table 2",
+      "title": "Results of comparison to the baseline model in the test set for facial dysphagia intensity",
+      "page": 22,
+      "columns": ["DCNC2f", "CloFormer", "ConvBiLSTM", "Params (M)", "FLOPs (G)", "FPS", "Accuracy (%)", "Fscore (%)"],
+      "confidence": "high"
+    },
+    {
+      "id": "Table 3",
+      "title": "Comparison of the proposed integrated neural network model (INNM) with SOTA models",
+      "page": 24,
+      "columns": ["Models", "Classifier", "Accuracy (%)", "Fscore-Moderate (%)", "Fscore-Normal (%)", "Fscore-Severe (%)", "Fscore-Slight (%)"],
+      "confidence": "high"
+    },
+    {
+      "id": "Table 4",
+      "title": "Comparison of DCNC2f in different positions in the test set for facial dysphagia intensity",
+      "page": 26,
+      "columns": ["Position", "Params (M)", "FLOPs (G)", "FPS", "Accuracy (%)", "Fscore (%)"],
+      "confidence": "high"
+    },
+    {
+      "id": "Table 5",
+      "title": "Comparison of CloFormer at different positions in the test set of dysphagia intensity",
+      "page": 27,
+      "columns": ["Position", "Params (M)", "FLOPs (G)", "FPS", "Accuracy (%)", "Fscore (%)"],
+      "confidence": "high"
+    },
+    {
+      "id": "Table 6",
+      "title": "Results of CNN-ConvBiLSTM with different number of branches in the test set",
+      "page": 28,
+      "columns": ["Branches", "Params (M)", "FLOPs (G)", "FPS", "Accuracy (%)", "Fscore (%)"],
+      "confidence": "high"
+    },
+    {
+      "id": "Table 7",
+      "title": "Comparison results of multi-branch CNN-ConvBiLSTM with different connectivity in the test set",
+      "page": 29,
+      "columns": ["Connection methods", "Params (M)", "FLOPs (G)", "FPS", "Accuracy (%)", "Fscore (%)"],
+      "confidence": "high"
+    }
+  ],
+  "equations": [
+    {
+      "id": "eq1",
+      "formula": "x_d = x / x_max",
+      "description": "Normalization equation",
+      "section": "2.1 Pre-processing",
+      "confidence": "high"
+    },
+    {
+      "id": "eq2",
+      "formula": "i_t = σ(W_xi*x_t + W_hi*h_{t-1} + W_ci*c_{t-1} + b_i)",
+      "description": "Input gate of LSTM",
+      "section": "2.3 Proposed converged CNN-ConvBiLSTM network",
+      "confidence": "high"
+    },
+    {
+      "id": "eq3",
+      "formula": "f_t = σ(W_xf*x_t + W_hf*h_{t-1} + W_cf*c_{t-1} + b_f)",
+      "description": "Forget gate of LSTM",
+      "section": "2.3 Proposed converged CNN-ConvBiLSTM network",
+      "confidence": "high"
+    },
+    {
+      "id": "eq4",
+      "formula": "c_t = f_t*c_{t-1} + i_t*tanh(W_xc*x_t + w_hc*h_{t-1} + b_c)",
+      "description": "Cell state update of LSTM",
+      "section": "2.3 Proposed converged CNN-ConvBiLSTM network",
+      "confidence": "high"
+    },
+    {
+      "id": "eq5",
+      "formula": "o_t = σ(W_xo*x_t + W_ho*h_{t-1} + W_co*c_t + b_o)",
+      "description": "Output gate of LSTM",
+      "section": "2.3 Proposed converged CNN-ConvBiLSTM network",
+      "confidence": "high"
+    },
+    {
+      "id": "eq6",
+      "formula": "h_t = o_t*tanh(c_t)",
+      "description": "Hidden state output of LSTM",
+      "section": "2.3 Proposed converged CNN-ConvBiLSTM network",
+      "confidence": "high"
+    },
+    {
+      "id": "eq7",
+      "formula": "N_params = (I×(k×k)×O)+O",
+      "description": "Number of model parameters",
+      "section": "3.4 Evaluation metrics",
+      "confidence": "high"
+    },
+    {
+      "id": "eq8",
+      "formula": "FLOPs = H×W×N_params",
+      "description": "Floating-point operations",
+      "section": "3.4 Evaluation metrics",
+      "confidence": "high"
+    },
+    {
+      "id": "eq9",
+      "formula": "Accuracy = (TP+TN)/(TP+TN+FP+FN)",
+      "description": "Classification accuracy",
+      "section": "3.4 Evaluation metrics",
+      "confidence": "high"
+    },
+    {
+      "id": "eq10",
+      "formula": "Precision = TP/(TP+FP)",
+      "description": "Precision metric",
+      "section": "3.4 Evaluation metrics",
+      "confidence": "high"
+    },
+    {
+      "id": "eq11",
+      "formula": "Recall = TP/(TP+FN)",
+      "description": "Recall metric",
+      "section": "3.4 Evaluation metrics",
+      "confidence": "high"
+    },
+    {
+      "id": "eq12",
+      "formula": "Fscore = 2×P×R/(P+R)",
+      "description": "F-score metric",
+      "section": "3.4 Evaluation metrics",
+      "confidence": "high"
+    },
+    {
+      "id": "eq13",
+      "formula": "FPS = 1/ITPF",
+      "description": "Frames per second inference speed",
+      "section": "3.4 Evaluation metrics",
+      "confidence": "high"
+    }
+  ],
+  "references": [
+    {"id": "1", "citation": "Yuhe F, Lixun Z, Canxing Z, Yunqin Z, Xingyuan W, Jinghui Z (2024) Real-time and accurate meal detection for meal-assisting robots. J Food Eng 371: 111996.", "confidence": "high"},
+    {"id": "2", "citation": "Yuhe F, Lixun Z, Canxing Z, Yunqin Z, Keyi W, Xingyuan W (2024) Real-time and accurate model of instance segmentation of foods. J Real-Time Image Pr 21: 80.", "confidence": "high"},
+    {"id": "3", "citation": "Hutchison AR, Wishart LR, Brown B, Ward EC, Porceddu S (2021) Exploring the interplay between radiotherapy dose and physiological changes in the swallowing mechanism in patients undergoing (chemo)radiotherapy for oropharynx cancer. Dysphagia 37: 567-577.", "confidence": "high"},
+    {"id": "4", "citation": "Ikuko O, Satoru E (2022) Are oropharyngeal dysphagia screening tests effective in preventing pneumonia. J Clin Med 11(2): 370.", "confidence": "high"},
+    {"id": "5", "citation": "Farneti D (2017) Voice and dysphagia. Dysphagia 257-274.", "confidence": "high"},
+    {"id": "6", "citation": "Hengling Z, Yangyang J, Shenghan W, Fei H, Fangzhou R, Zhonghao Z (2022) Dysphagia diagnosis system with integrated speech analysis from throat vibration. Expert Syst Appl 204: 117496.", "confidence": "high"},
+    {"id": "7", "citation": "Yuhe F, Lixun Z, Xingyuan W, Keyi W, Lan W, Zhenhan W, Feng X, Jinghui Z, Chao W (2022) Rheological thixotropy and pasting properties of food thickening gums orienting at improving food holding rate. Appl Rheol 32: 100-121.", "confidence": "high"},
+    {"id": "8", "citation": "Yuhe F, Lixun Z, Jinghui Z, Yunqin Z, Xingyuan W (2022) Viscoelasticity and friction of solid foods measurement by simulating meal-assisting robot. Int J Food Prop 25 (1): 2301-2319.", "confidence": "high"},
+    {"id": "9", "citation": "Yuhe F, Lixun Z, Canxing Z, Xingyuan W, Keyi W, Jinghui Z (2023) Motion behavior of non-Newtonian fluid-solid interaction foods. J Food Eng 347: 111448.", "confidence": "high"},
+    {"id": "10", "citation": "Yuhe F, Lixun Z, Canxing Z, Feng X, Zhenhan W, Xingyuan W, Lan W (2023) Contact forces and motion behavior of non-Newtonian fluid-solid food by coupled SPH-FEM method. J Food Sci 88(6): 1-21.", "confidence": "high"},
+    {"id": "11", "citation": "Yuhe F, Lixun Z, Caixing Z, Xingyuan W, Jinghui Z, Lan W (2024) Instance segmentation of faces and mouth-opening degrees based on improved YOLOv8 method. Multimedia Syst 30: 269.", "confidence": "high"},
+    {"id": "12", "citation": "Yuhe F, Lixun Z, Canxing Z, Zhenhan W, Jinghui Z, Xingyuan W (2024) Real-time and accurate detection for face and mouth openings in meal-assisting robotics. Signal Image Video P 18: 9257-9274.", "confidence": "high"},
+    {"id": "13", "citation": "Muhammad S, Fath UMU, Mohib U, Georgia C, Faouzi AC, Mohammad H (2023) A comprehensive survey on deep facial expression recognition: challenges, applications, and future guidelines. Alex Eng J 68: 817-840.", "confidence": "high"},
+    {"id": "14", "citation": "Qingxiang W, Huanxin Y, Yanhong Y (2018) Facial expression video analysis for depression detection in Chinese patients. J Vis Commun Image R 57: 228-233.", "confidence": "high"},
+    {"id": "15", "citation": "Adyapady RR, Annappa B (2023) A comprehensive review of facial expression recognition techniques. Multimedia Syst 29: 73-103.", "confidence": "high"},
+    {"id": "16", "citation": "Taigman Y, Yang M, Ranzato MA, Wolf L (2014) Deepface: closing the gap to human-level performance in face verification. In CVPR pp.1701-1708.", "confidence": "high"},
+    {"id": "17", "citation": "Sun Y, Wang X, Tang X (2015) Deeply learned face representations are sparse, selective, and robust. In CVPR pp. 2892-2900.", "confidence": "high"},
+    {"id": "18", "citation": "Glenn J (2023) Ultralytics YOLOv8. https://github.com/ultralytics/ultralytics.", "confidence": "high"},
+    {"id": "19", "citation": "Redmon J, Divvala S, Girshick R, Farhadi A (2016) You only look once: Unified, real-time object detection. In: CVPR pp. 779-788.", "confidence": "high"},
+    {"id": "20", "citation": "Hu F, Xia GS, Hu J, Zhang L (2015) Transferring deep convolutional neural networks for the scene classification of high-resolution remote sensing imagery. Remote Sens (Basel) 7(11): 14680-707.", "confidence": "high"},
+    {"id": "21", "citation": "Zhou J, Hong X, Su F, Zhao G (2016) Recurrent convolutional neural network regression for continuous pain intensity estimation in video. In: CVPR pp. 84-92.", "confidence": "high"},
+    {"id": "22", "citation": "Dyer C, Ballesteros M, Ling W, Matthews A, Smith NA (2015) Transition-based dependency parsing with stack long short-term memory. In: ACL IJCNLP pp.334-343.", "confidence": "high"},
+    {"id": "23", "citation": "Ghazal B, Xujuan Z, Ravinesh CD, Jeffrey S, Frank W, Hua W (2020) Enhanced deep learning algorithm development to detect pain intensity from facial expression images. Expert Syst Appl 149: 113305.", "confidence": "high"},
+    {"id": "24", "citation": "Ghazal B, Xujuan Z, Ravinesh CD, Jeffrey S, Frank W, Hua W (2020) Ensemble neural network approach detecting pain intensity from facial expressions. Artif Intell Med 109: 101954.", "confidence": "high"},
+    {"id": "25", "citation": "Rodriguez P, Cucurull G, Gonzàlez J, Gonfaus JM, Nasrollahi K (2022) Deep pain: exploiting long short-term memory networks for facial expression classification. IEEE T Cybernetics 52(5): 3314-3324.", "confidence": "high"},
+    {"id": "26", "citation": "Bargshady G, Soar J, Zhou X, Deo RC, Whittaker F, Wang H (2019) A joint deep neural network model for pain recognition from face. In: IEEE ICCCS pp. 52-56.", "confidence": "high"},
+    {"id": "27", "citation": "Egede J, Valstar M, Torres MT, Sharkey D (2019) Automatic neonatal pain estimation: an acute pain in neonates database. In: IEEE ACII pp. 1-7.", "confidence": "high"},
+    {"id": "28", "citation": "Ding C, Tao D (2017) Trunk-branch ensemble convolutional neural networks for video-based face recognition. IEEE T Pattern Anal 40(4): 1002-1014.", "confidence": "high"},
+    {"id": "29", "citation": "Parkhi OM, Vedaldi A, Zisserman A (2015) Deep face recognition. In: BMVC pp. 1-12.", "confidence": "high"},
+    {"id": "30", "citation": "Qiong C, Li S, Weidi X, Omkar MP, Andrew Z (2018) VGGFace2: A dataset for recognising faces across pose and age. In: IEEE Face and Gesture pp. 67-74.", "confidence": "high"},
+    {"id": "31", "citation": "Ganaie MA, Hu M, Malik AK, Tanveer M, Suganthan PN (2022) Ensemble deep learning: A review. Eng Appl Artif Intel 115: 105151.", "confidence": "high"},
+    {"id": "32", "citation": "Dai J, Qi H, Xiong Y, Li Y, Zhang G, Hu H, Wei Y (2017) Deformable convolutional networks. In: ICCV pp. 764-773.", "confidence": "high"},
+    {"id": "33", "citation": "He K, Zhang X, Ren S, Sun J (2016) Deep residual learning for image recognition. In: CVPR pp. 770-778.", "confidence": "high"},
+    {"id": "34", "citation": "Qihang F, Huaibo H, Jiyang G, Ran H (2023) Rethinking Local Perception in Lightweight Vision Transformer. In: CVPR arXiv:2303.17803.", "confidence": "high"},
+    {"id": "35", "citation": "Schmidhuber J (2015) Deep learning in neural networks: an overview. Neural Networks 61: 85-117.", "confidence": "high"},
+    {"id": "36", "citation": "Gers FA, Schmidhuber E (2001) LSTM recurrent networks learn simple context-free and context-sensitive languages. IEEE T Neur Net Lear 12(6): 1333-1340.", "confidence": "high"},
+    {"id": "37", "citation": "Redmon J, Farhadi A (2018) Yolov3: An incremental improvement. In: CVPR pp. 7794-7803.", "confidence": "high"},
+    {"id": "38", "citation": "Jocher G (2021) YOLOv5 by Ultralytics. https://github.com/ultralytics/yolov5.", "confidence": "high"},
+    {"id": "39", "citation": "Li C, Li L, Jiang H, Weng K, Geng Y (2022) Yolov6: A single-stage object detection framework for industrial applications. In: arXiv preprint arXiv:2209.02976.", "confidence": "high"},
+    {"id": "40", "citation": "Marco B, Mohammad AH, Pau R, Kamal N, Taisi T (2016) Spatio-temporal Pain Recognition in CNN-Based Super-Resolved Facial Images. Video analytics 151-162.", "confidence": "high"},
+    {"id": "41", "citation": "Mohammad AH, Ruben BB, Fatemeh N, Kaustubh K, Christian BL, Ramin I (2018) Deep multimodal pain recognition: a database and comparison of spatio-temporal visual modalities. In: IEEE Press pp. 250-257.", "confidence": "high"},
+    {"id": "42", "citation": "Powers DM (2011) Evaluation: from precision, recall and F-measure to ROC, informedness, markedness and correlation. Int J Mach Learn 2(1): 37-63.", "confidence": "high"}
+  ],
+  "acknowledgments": "The research work is supported by National Key R&D Program of China under grant 2020YFC2007700 and Fundamental Research Funds for the Central Universities of China under grant 3072022CF0703.",
+  "parse_quality_notes": [
+    "PDF extracted using PyPDF2 - text content extracted successfully",
+    "Mathematical equations may have formatting issues - formulas rendered as plain text",
+    "Figures and tables extracted from text descriptions - visual content not available",
+    "References extracted from text - citation formatting preserved as in original"
+  ]
+}
