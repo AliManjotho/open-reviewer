@@ -29,13 +29,18 @@
 <img src="assets/model.png" alt="model">
 
 
----
+<br>
 
 ## 📌 Overview
-OpenReviewer is an advanced **multi-agent AI system** designed to automate the review of research papers with a strong focus on **evidence validation, integrity auditing, and structured analysis**.
+Ever submitted a paper and faced rejection—without clear, actionable feedback?
+What if you had access to a team of expert reviewers before submission, helping you identify weaknesses, validate claims, and strengthen your manuscript?
 
-The system orchestrates multiple specialized agents to analyze manuscripts across language quality, methodology, experiments, citations, and cross-section consistency—producing **transparent, explainable, and reproducible review reports**.
+**Meet OpenReviewer.**
 
----
+OpenReviewer is an advanced **multi-agent AI system** built to deliver **pre-submission**, **evidence-driven research paper reviews at scale**.
+
+It orchestrates a team of specialized AI agents to analyze manuscripts across **language quality**, **methodology**, **experiments**, **citations**, and **cross-section consistency—producing transparent**, **explainable**, and **reproducible review reports** that help you improve your work before it reaches reviewers.
+
+<br>
 
 OpenReviewer is an automated multi-agent system for deep, evidence-driven research paper review, validation, and integrity auditing across methodology, experiments, citations, and cross-section consistency.
