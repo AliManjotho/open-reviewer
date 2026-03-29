@@ -9,16 +9,11 @@
   <br>
   
   <p>
-    <a href="https://github.com/AliManjotho">Ali Asghar Manjotho</a><sup>1,2</sup>&nbsp;
-    <a href="https://wyattz23.github.io">Tekie Tsegay Tewolde</a><sup>1</sup>&nbsp;
-    <a href="https://upup-wei.github.io/">Ramadhani Ally Duma</a><sup>3</sup>&nbsp;
-    <a href="https://Y-Research-SBU.github.io/PosterGen">Zhendong Niu</a><sup>1</sup>&nbsp;
+    <a href="https://github.com/AliManjotho">Ali Asghar Manjotho</a><sup>1</sup>&nbsp;
   </p>
 
   <p>
-    <sup>1</sup> Beijing Institute of Technology &nbsp;&nbsp; 
     <sup>2</sup> Mehran Univerity of Engineering and Technology, Jamshoro, Pakistan &nbsp;&nbsp;
-    <sup>3</sup> The University of Dodoma, Tanzania &nbsp;&nbsp; <br>
   </p>
 
 <p align="center">
