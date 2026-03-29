@@ -132,4 +132,5 @@ git clone https://github.com/your-username/OpenReviewer.git
 
 # Navigate to project
 cd OpenReviewer
-🛠️ Installation
+
+## 🛠️ Installation
