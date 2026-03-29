@@ -17,9 +17,8 @@
   </p>
 
 <p align="center">
-  <a href="https://alimanjotho.github.io/coshmdm/">
-    <img src="https://img.shields.io/badge/Project-Website-blue?style=flat-square&logo=github" alt="Project Website">
-  </a>
+    <img src="https://img.shields.io/badge/Primary_Agents-01-blue" alt="Project Website">
+
    
   <a href="https://www.linkedin.com/in/alimanjotho/">
     <img src="https://img.shields.io/badge/LinkedIn-Profle?style=flat-square&logo=linkedin" alt="LinkedIn Profile">
