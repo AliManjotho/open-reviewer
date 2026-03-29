@@ -132,5 +132,44 @@ git clone https://github.com/your-username/OpenReviewer.git
 
 # Navigate to project
 cd OpenReviewer
+```
 
 ## 🛠️ Installation
+### 0. Install and configure <code>OpenCode</code>
+You must first install and configure OpenCode
+
+### 1. Create Environment
+```
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+```
+### 2. Install Dependencies
+
+
+## 📊 Outputs
+ -📄 Issue Reports
+  -Structured findings with severity levels
+ -📈 Scorecards
+  -Section-wise and overall evaluation
+ -🧾 Final Reviews
+  -JSON (machine-readable)
+  -Markdown (human-readable)
+  -HTML (optional)
+
+## 🧠 Key Features
+✅ Multi-agent orchestration
+✅ Evidence-driven validation
+✅ Citation integrity auditing
+✅ Cross-section consistency analysis
+✅ Explainable outputs with traceability
+
+
+## 📜 License
+
+MIT License
+
+## ⭐ Support
+
+If you find this project useful, please ⭐ the repo!
+
