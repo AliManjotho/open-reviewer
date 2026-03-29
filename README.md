@@ -139,9 +139,23 @@ cd OpenReviewer
 You must first install and configure OpenCode. Follow the instructions in <a href="./assets/opencode.pdf">opencode.pdf</a>
 <img src="./assets/logo-opencode.png" height="80" style="object-fit: contain;">
 
- -Download and Install curl by vising the following link:
+0.1 Download and install curl by vising the following link:
 ```
 https://curl.se/
+```
+0.2 Extract the folder in C:\
+0.3 Rename the folder to <code>curl</code>
+0.4 Add <code>curl</code> bin path in <code>PATH</code> environment variable:
+```
+C:\curl\bin
+```
+0.5 Visit the following link to download and install git:
+```
+https://git-scm.com/
+```
+0.6 Open command prompt and run:
+```
+wsl --install
 ```
 
 ### 1. Create Environment
