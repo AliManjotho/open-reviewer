@@ -1,7 +1,7 @@
 
 <div align="center">
   
-  <img src="./assets/logo.png" height="110" style="object-fit: contain;">
+  <img src="./assets/logo.png" height="200" style="object-fit: contain;">
 
   <h2>OpenReviewer: Automated Multi-Agent System for Evidence-Driven Research Paper Review and Integrity Auditing</h2>
   <!-- <h4>🌟 🌟</h4> -->
