@@ -143,7 +143,7 @@ C:\curl\bin
 ```
 https://git-scm.com/
 ```
-#### 1.6 Open command prompt and run:
+#### 1.6 Install WSL by running the below command in command prompt:
 ```
 wsl --install
 ```
