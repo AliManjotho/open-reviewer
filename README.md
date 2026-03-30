@@ -31,6 +31,10 @@
 
 <br>
 
+<div align="center">
+  <img src="assets/demo.gif"/>
+</div>
+
 <table>
 <tr>
 <td valign="top" width="50%">
