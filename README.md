@@ -15,7 +15,7 @@
   </p>
 
   <p>
-    <sup>1</sup> Department of Computer Systems Engineering, Mehran Univerity of Engineering and Technology, Jamshoro, Pakistan &nbsp;&nbsp;
+    <sup>1</sup> Department of Computer Systems Engineering, Mehran University of Engineering and Technology, Jamshoro, Pakistan &nbsp;&nbsp;
   </p>
 
 <p align="center">
