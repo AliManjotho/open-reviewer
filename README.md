@@ -157,6 +157,10 @@ https://git-scm.com/
 ```
 wsl --install
 ```
+0.7 Open <code>git bash</code> from start menu and run the following command:
+```
+curl -fsSL https://opencode.ai/install | bash
+```
 
 ### 1. Create Environment
 ```
