@@ -197,13 +197,21 @@ opencode
 
 ## 📊 Outputs
  -📄 Issue Reports
+ 
   -Structured findings with severity levels
+  
  -📈 Scorecards
+ 
   -Section-wise and overall evaluation
+  
  -🧾 Final Reviews
+ 
   -JSON (machine-readable)
+  
   -Markdown (human-readable)
+  
   -HTML (optional)
+  
 
 ## 🧠 Key Features
 ✅ Multi-agent orchestration
