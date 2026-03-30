@@ -124,51 +124,46 @@ It orchestrates a team of specialized AI agents to analyze manuscripts across **
 
 
 
-## ⚡ Quick Start
-
-```bash
-# Clone repository
-git clone https://github.com/your-username/OpenReviewer.git
-
-# Navigate to project
-cd OpenReviewer
-```
-
 ## 🛠️ Installation
-### 0. Install and configure <code>OpenCode</code>
+### 1. Install and configure <code>OpenCode</code>
 You must first install and configure OpenCode. Follow the instructions in <a href="./assets/opencode.pdf">opencode.pdf</a>
 <img src="./assets/logo-opencode.png" height="80" style="object-fit: contain;">
 
-0.1 Download and install curl by vising the following link:
+1.1 Download and install curl by vising the following link:
 ```
 https://curl.se/
 ```
-0.2 Extract the folder in C:\
-0.3 Rename the folder to <code>curl</code>
-0.4 Add <code>curl</code> bin path in <code>PATH</code> environment variable:
+1.2 Extract the folder in C:\
+1.3 Rename the folder to <code>curl</code>
+1.4 Add <code>curl</code> bin path in <code>PATH</code> environment variable:
 ```
 C:\curl\bin
 ```
-0.5 Visit the following link to download and install git:
+1.5 Visit the following link to download and install git:
 ```
 https://git-scm.com/
 ```
-0.6 Open command prompt and run:
+1.6 Open command prompt and run:
 ```
 wsl --install
 ```
-0.7 Open <code>git bash</code> from start menu and run the following command:
+1.7 Open <code>git bash</code> from start menu and run the following command:
 ```
 curl -fsSL https://opencode.ai/install | bash
 ```
+1.8 Add opencode path in <code>PATH</code> environment variable:
+```
+C:\Users\Ali\.opencode\bin
+```
+Change <code>Ali</code> with your own system username
 
-### 1. Create Environment
+### 2. Install OpenReviewer
+```bash
+https://github.com/AliManjotho/open-reviewer.git
+cd open-reviewer
+opencode
 ```
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-```
-### 2. Install Dependencies
+
 
 
 ## 📊 Outputs
