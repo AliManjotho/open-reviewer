@@ -135,6 +135,7 @@ https://curl.se/
 ```
 1.2 Extract the folder in C:\
 1.3 Rename the folder to <code>curl</code>
+
 1.4 Add <code>curl</code> bin path in <code>PATH</code> environment variable:
 ```
 C:\curl\bin
