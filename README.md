@@ -31,6 +31,19 @@
 
 <br>
 
+<table>
+<tr>
+<td width="18%">
+<a href="assets/motion-generation-paper.pdf"><img src="assets/motion-generation-paper-thumbnail.png" width="120" alt="Sample Paper"/></a>
+</td>
+<td valign="middle">
+<b>🏆 Generated Paper Showcase</b><br><br>
+<b>8 papers across 8 domains</b> — math, statistics, biology, computing, NLP, RL, vision, robustness — generated fully autonomously with zero human intervention.<br><br>
+<a href="docs/showcase/SHOWCASE.md"><img src="https://img.shields.io/badge/View_Full_Showcase_→-All_8_Papers-d73a49?style=for-the-badge" alt="View Showcase"></a>
+</td>
+</tr>
+</table>
+
 ## 📌 Overview
 Ever submitted a paper and faced rejection—without clear, actionable feedback?
 What if you had access to a team of expert reviewers before submission, helping you identify weaknesses, validate claims, and strengthen your manuscript?
