@@ -129,30 +129,29 @@ It orchestrates a team of specialized AI agents to analyze manuscripts across **
 You must first install and configure OpenCode. Follow the instructions in <a href="./assets/opencode.pdf">opencode.pdf</a>
 <img src="./assets/logo-opencode.png" height="80" style="object-fit: contain;">
 
-1.1 Download and install curl by vising the following link:
+#### 1.1 Download and install curl by vising the following link:
 ```
 https://curl.se/
 ```
-1.2 Extract the folder in C:\
-1.3 Rename the folder to <code>curl</code>
-
-1.4 Add <code>curl</code> bin path in <code>PATH</code> environment variable:
+#### 1.2 Extract the folder in C:\
+#### 1.3 Rename the folder to <code>curl</code>
+#### 1.4 Add <code>curl</code> bin path in <code>PATH</code> environment variable:
 ```
 C:\curl\bin
 ```
-1.5 Visit the following link to download and install git:
+#### 1.5 Visit the following link to download and install git:
 ```
 https://git-scm.com/
 ```
-1.6 Open command prompt and run:
+#### 1.6 Open command prompt and run:
 ```
 wsl --install
 ```
-1.7 Open <code>git bash</code> from start menu and run the following command:
+#### 1.7 Open <code>git bash</code> from start menu and run the following command:
 ```
 curl -fsSL https://opencode.ai/install | bash
 ```
-1.8 Add opencode path in <code>PATH</code> environment variable:
+#### 1.8 Add opencode path in <code>PATH</code> environment variable:
 ```
 C:\Users\Ali\.opencode\bin
 ```
@@ -163,6 +162,20 @@ Change <code>Ali</code> with your own system username
 https://github.com/AliManjotho/open-reviewer.git
 cd open-reviewer
 opencode
+```
+
+### 3. Run Single Paper Review
+#### Copy the research paper pdf file in <code>open-reviewer/papers/raw/</code>
+#### Write the following prompt in the opencode CLI:
+```bash
+/review-paper Please review the research paper my-paper.pdf stored in papers/raw/ folder
+```
+
+### 4. Run Batch Review
+#### Copy all research paper pdfs in <code>open-reviewer/papers/raw/</code>
+#### Write the following prompt in the opencode CLI:
+```bash
+/batch-review Please review all research papers stored in papers/raw/ folder
 ```
 
 
