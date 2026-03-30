@@ -48,11 +48,7 @@
   </div>
 </td>
 </tr>
-</table>
 
-
-
-<table>
 <tr>
 <td valign="top" width="50%">
   <div align="center">
