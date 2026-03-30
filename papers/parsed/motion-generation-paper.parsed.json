@@ -1,0 +1,239 @@
+{
+  "paper_id": "motion-generation-paper",
+  "source_pdf": "papers/raw/motion-generation-paper.pdf",
+  "metadata": {
+    "title": "Connecting Action Semantics and Human Motion using Fuzzy Qualitative Kinematics",
+    "authors": [
+      "Ali Asghar Manjotho",
+      "Tekie Tsegay Tewolde",
+      "Zhendong Niu"
+    ],
+    "affiliations": [
+      "School of Computer Science and Technology, Beijing Institute of Technology, China"
+    ],
+    "venue": "IEEE Transactions on Fuzzy Systems",
+    "volume": "32",
+    "issue": "3",
+    "month": "March",
+    "year": 2024,
+    "corresponding_author": {
+      "name": "Zhendong Niu",
+      "email": "zniu@bit.edu.cn"
+    },
+    "emails": [
+      "ali.manjotho@bit.edu.cn",
+      "tekie.tsegay@bit.edu.cn",
+      "zniu@bit.edu.cn"
+    ],
+    "keywords": [
+      "Human motion generation",
+      "automated animations",
+      "motion semantics",
+      "fuzzy reasoning",
+      "qualitative kinematics"
+    ]
+  },
+  "abstract": "Human motion understanding is fundamental to various applications in computer graphics, human-robot interactions, digital environments, and smart healthcare. Existing approaches predominantly rely on quantitative and qualitative kinematic facts for motion modeling. However, they often struggle to establish a robust connection between motion and corresponding action semantics. This is primarily attributed to the use of inadequate motion representations and presence of uncertainties in kinematic hierarchies. We propose a novel fuzzy qualitative kinematics (FQK) approach to effectively bridge action semantics and human motion. Our approach exploits the fusion of fuzzy inference and qualitative reasoning to model expressive, complex, and uncertain kinematic facts. First, we construct fuzzy linguistic vocabulary and membership functions for motion attributes. Second, we extract novel fuzzy qualitative tokens (FQTs) from motion sequences by employing FQK to represent various motion attributes across different motion components. Third, we propose a dual-branch adaptive neuro-fuzzy inference (D-ANFI) block. Finally, we evaluate a unified motion understanding system on interpolation, prediction, generation, and prompt-related tasks using HumanML3D and KIT-ML.",
+  "sections": [
+    {
+      "id": "SEC-001",
+      "title": "Introduction",
+      "pages": "1-2",
+      "summary": "Frames the semantic gap between raw human motion and action semantics and motivates fuzzy qualitative tokens as an uncertainty-aware intermediate representation.",
+      "key_claims": [
+        "Existing qualitative schemes rely on boolean or thresholded kinematic facts.",
+        "FQTs are proposed to better capture uncertainty, direction, amplitude, and velocity changes.",
+        "The approach targets interpolation, prediction, generation, and fine-grained prompt-based control."
+      ]
+    },
+    {
+      "id": "SEC-002",
+      "title": "Related Work",
+      "pages": "2",
+      "summary": "Reviews human motion representation and motion generation literature, emphasizing intermediate representations and generative modeling families."
+    },
+    {
+      "id": "SEC-003",
+      "title": "Method",
+      "pages": "2-7",
+      "summary": "Defines fuzzy linguistic vocabularies, Gaussian membership functions, qualitative state functions, 11 fuzzy qualitative token families, a token extractor, a fuzzy-learning description, and a unified transformer-VAE-style motion understanding model.",
+      "subsections": [
+        "Fuzzy Linguistic Vocabulary",
+        "Fuzzy Membership Function",
+        "Fuzzy Qualitative States",
+        "Fuzzy Qualitative Tokens (FQTs)",
+        "Fuzzy Qualitative Token Extractor (FQTE)",
+        "Fuzzy Learning",
+        "Constructing Fuzzy Qualitative Token Base",
+        "Motion Understanding via FQTs",
+        "Unified Model Structure"
+      ]
+    },
+    {
+      "id": "SEC-004",
+      "title": "Implementation Details",
+      "pages": "7",
+      "summary": "Reports optimization settings, latent size, hardware, datasets, and task-specific inference descriptions."
+    },
+    {
+      "id": "SEC-005",
+      "title": "Kinematic Prompt Generation",
+      "pages": "8",
+      "summary": "Describes conversion of FQTs into text prompts and reports a prompt dataset of 1,548 items."
+    },
+    {
+      "id": "SEC-006",
+      "title": "Experiments",
+      "pages": "8-10",
+      "summary": "Evaluates the method on HumanML3D and KIT-ML with FID, Diversity, Multimodality, Accuracy, and R-Precision, plus qualitative examples, user study, and ablations."
+    },
+    {
+      "id": "SEC-007",
+      "title": "Conclusion",
+      "pages": "10-11",
+      "summary": "Reiterates the promise of FQTs for bridging motion and semantics and claims strong benchmark performance."
+    },
+    {
+      "id": "SEC-008",
+      "title": "Limitations and Future Work",
+      "pages": "11",
+      "summary": "Notes trade-offs in fuzzy vocabulary size, additional attributes, additional tokens, and translation ambiguity."
+    }
+  ],
+  "figures": [
+    {
+      "id": "Fig. 1",
+      "caption": "Semantic gap between raw motion and action descriptions, with FQTs proposed as an intermediate representation.",
+      "section": "SEC-003"
+    },
+    {
+      "id": "Fig. 2",
+      "caption": "Three-tuple Gaussian membership functions for distance, angle, and velocity.",
+      "section": "SEC-003"
+    },
+    {
+      "id": "Fig. 3",
+      "caption": "Visualization of the fuzzy unit circle, membership functions, and 11 token families.",
+      "section": "SEC-003"
+    },
+    {
+      "id": "Fig. 4",
+      "caption": "D-ANFI block and unified motion understanding system.",
+      "section": "SEC-003"
+    },
+    {
+      "id": "Fig. 5",
+      "caption": "Qualitative motion-generation comparison for a jump-rope prompt.",
+      "section": "SEC-006"
+    },
+    {
+      "id": "Fig. 6",
+      "caption": "Sample learned membership functions.",
+      "section": "SEC-006"
+    },
+    {
+      "id": "Fig. 7",
+      "caption": "Fine-grained motion modification via FQT edits.",
+      "section": "SEC-006"
+    },
+    {
+      "id": "Fig. 8",
+      "caption": "User perceptual study results for text-motion correspondence and motion naturalness.",
+      "section": "SEC-006"
+    }
+  ],
+  "tables": [
+    {
+      "id": "Table I",
+      "caption": "Sample text prompts converted from FQTs.",
+      "section": "SEC-005"
+    },
+    {
+      "id": "Table II",
+      "caption": "Main benchmark comparison across interpolation, generation, and prediction tasks.",
+      "section": "SEC-006"
+    },
+    {
+      "id": "Table III",
+      "caption": "KPG versus extended-KPG comparison.",
+      "section": "SEC-006"
+    },
+    {
+      "id": "Table IV",
+      "caption": "Ablation study with different FQT sets.",
+      "section": "SEC-006"
+    }
+  ],
+  "equations": [
+    {
+      "id_range": "Eq. (1)-(3)",
+      "description": "Fuzzy linguistic vocabularies for distance, angle, and velocity."
+    },
+    {
+      "id_range": "Eq. (4)",
+      "description": "Gaussian membership function."
+    },
+    {
+      "id_range": "Eq. (5)-(7)",
+      "description": "Qualitative state functions for distance, angle, and velocity."
+    },
+    {
+      "id_range": "Eq. (8)-(29)",
+      "description": "Definitions for FQT families covering angle, distance, displacement, and velocity tokens."
+    },
+    {
+      "id_range": "Eq. (30)-(32)",
+      "description": "Reconstruction, KL-divergence, and embedding-alignment losses."
+    }
+  ],
+  "references": [
+    {
+      "id": "[4]",
+      "title": "Bridging the gap between human motion and action semantics via kinematic phrases",
+      "note": "Appears duplicated as [21]."
+    },
+    {
+      "id": "[17]",
+      "title": "Fuzzy qualitative trigonometry"
+    },
+    {
+      "id": "[46]",
+      "title": "Generating diverse and natural 3d human motions from text",
+      "note": "Appears duplicated or inconsistently cited as [54]."
+    },
+    {
+      "id": "[47]",
+      "title": "The KIT motion-language dataset"
+    },
+    {
+      "id": "[48]",
+      "title": "A unified 3d human motion synthesis model via conditional variational auto-encoder"
+    },
+    {
+      "id": "[52]",
+      "title": "Executing your commands via motion diffusion in latent space"
+    },
+    {
+      "id": "[53]",
+      "title": "Human motion diffusion model"
+    },
+    {
+      "id": "[55]",
+      "title": "MotionGPT: Human motion as a foreign language"
+    },
+    {
+      "id": "[57]",
+      "title": "T2M-GPT: generating human motion from textual descriptions with discrete representations"
+    }
+  ],
+  "parse_quality": {
+    "status": "partial",
+    "notes": [
+      "PDF text was extractable, but the source paper contains internal inconsistencies that limit normalization fidelity.",
+      "The manuscript states 11 FQTs in the method but says the extractor uses ten types elsewhere.",
+      "Token names in Table I and the ablation section do not match the main method nomenclature.",
+      "An unresolved citation placeholder '[REF]' appears in the body text.",
+      "Several references appear duplicated or inconsistently normalized."
+    ]
+  }
+}

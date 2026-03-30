@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Review: motion-generation-paper</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px auto; max-width: 980px; line-height: 1.5; color: #1f2937; }
+    h1, h2, h3 { color: #111827; }
+    .meta { background: #f3f4f6; padding: 16px; border-radius: 10px; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #fee2e2; color: #991b1b; font-weight: 700; }
+    .section { margin-top: 28px; }
+    ul { padding-left: 22px; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+    .issue { border-left: 4px solid #dc2626; padding-left: 14px; margin: 18px 0; }
+  </style>
+</head>
+<body>
+  <h1>Review: motion-generation-paper</h1>
+  <div class="meta">
+    <p><strong>Paper:</strong> Connecting Action Semantics and Human Motion using Fuzzy Qualitative Kinematics</p>
+    <p><strong>Venue:</strong> IEEE Transactions on Fuzzy Systems, March 2024</p>
+    <p><strong>Recommendation:</strong> <span class="badge">weak_reject</span></p>
+    <p><strong>Confidence:</strong> 0.84</p>
+  </div>
+
+  <div class="section">
+    <h2>Executive Summary</h2>
+    <p>The paper's main positive is its representation idea: fuzzy qualitative tokens (FQTs) are a plausible attempt to bridge action semantics and raw motion with a more interpretable, uncertainty-aware intermediate layer. However, the manuscript has substantial weaknesses in technical specification, internal consistency, and empirical rigor. The core D-ANFI/fuzzy-learning contribution is underspecified; notation and token naming are inconsistent across the method, tables, and ablations; preprocessing and evaluation details conflict across sections; and broad superiority claims are stronger than the metric-level evidence currently supports. Combined with bibliography-integrity problems and notable language issues, these concerns reduce confidence in the paper's readiness despite the underlying idea being potentially interesting.</p>
+  </div>
+
+  <div class="section">
+    <h2>Scorecard</h2>
+    <ul>
+      <li>Originality: 7/10</li>
+      <li>Technical quality: 4/10</li>
+      <li>Empirical support: 4/10</li>
+      <li>Clarity: 3/10</li>
+      <li>Significance: 5/10</li>
+      <li>Scholarly hygiene: 3/10</li>
+      <li>Overall: 4.3/10</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Strengths</h2>
+    <ul>
+      <li>Addresses an important semantic-gap problem in human motion understanding.</li>
+      <li>FQTs are a plausible fuzzy extension of prior symbolic or qualitative motion representations.</li>
+      <li>Evaluates multiple tasks on HumanML3D and KIT-ML and includes qualitative, perceptual, and ablation-style analyses.</li>
+      <li>Includes an explicit limitations section.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Main Weaknesses</h2>
+    <ul>
+      <li>The central D-ANFI/fuzzy-learning contribution is not described precisely enough to verify or reproduce.</li>
+      <li>Notation, token definitions, and preprocessing details are inconsistent across sections.</li>
+      <li>Experimental claims are weakened by protocol ambiguity, incomplete baseline comparability, and missing significance testing.</li>
+      <li>Bibliography integrity and editorial quality require substantial cleanup.</li>
+      <li>Language and structure issues materially hinder confident technical assessment.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Prioritized Issues</h2>
+    <div class="issue">
+      <h3>1. Core D-ANFI and fuzzy-learning mechanism is underspecified</h3>
+      <p><strong>Severity:</strong> critical</p>
+      <p>The paper highlights D-ANFI as a central contribution, but the implementation and integration are not specified precisely enough to verify or reproduce.</p>
+    </div>
+    <div class="issue">
+      <h3>2. Equations and notation are inconsistent</h3>
+      <p><strong>Severity:</strong> major</p>
+      <p>Several token equations, indices, and operators are mismatched or undefined, making technical verification difficult.</p>
+    </div>
+    <div class="issue">
+      <h3>3. Token names do not match across method, tables, and ablations</h3>
+      <p><strong>Severity:</strong> major</p>
+      <p>The paper loses traceability from formal definitions to experiments because the nomenclature changes without explanation.</p>
+    </div>
+    <div class="issue">
+      <h3>4. Preprocessing and extractor descriptions conflict across sections</h3>
+      <p><strong>Severity:</strong> major</p>
+      <p>Reported frame rates and token counts are inconsistent across the method and implementation sections.</p>
+    </div>
+    <div class="issue">
+      <h3>5. Evaluation protocol is ambiguous</h3>
+      <p><strong>Severity:</strong> major</p>
+      <p>The wording around validation and test usage is unclear and weakens confidence in empirical rigor.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Red Flags</h2>
+    <ul>
+      <li>Core method description is underspecified and internally inconsistent.</li>
+      <li>Validation-versus-test wording is ambiguous.</li>
+      <li>Token-label mismatches break traceability from definitions to results.</li>
+      <li>Duplicate references and unresolved citation placeholder remain in the manuscript.</li>
+      <li>Summary claims are stronger than the currently reported evidence supports.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Questions for Authors</h2>
+    <ol>
+      <li>What is the exact implemented definition of D-ANFI, including rule learning, membership updates, branch fusion, and final integration point?</li>
+      <li>Can you reconcile all token names used in the method, Table I, and Table IV with a single glossary?</li>
+      <li>What is the correct preprocessing and split protocol used in the final experiments?</li>
+      <li>Which baseline numbers were reproduced under matched conditions, and which were imported from prior work?</li>
+      <li>Can you report repeated-run statistics and significance testing for the main results and user study?</li>
+      <li>Which components are the genuine novelty of the paper: FQTs, D-ANFI, the unified model, or the prompt-generation mechanism?</li>
+    </ol>
+  </div>
+
+  <div class="section">
+    <h2>Output Artifacts</h2>
+    <ul>
+      <li><code>papers/parsed/motion-generation-paper.parsed.json</code></li>
+      <li><code>papers/enriched/motion-generation-paper.enriched.json</code></li>
+      <li><code>reviews/json/motion-generation-paper.review.json</code></li>
+      <li><code>reviews/markdown/motion-generation-paper.review.md</code></li>
+      <li><code>reviews/html/motion-generation-paper.review.html</code></li>
+    </ul>
+  </div>
+</body>
+</html>

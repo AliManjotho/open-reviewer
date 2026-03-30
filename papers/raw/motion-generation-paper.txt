@@ -1,0 +1,895 @@
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024             1
+
+Connecting Action Semantics and Human Motion
+        using Fuzzy Qualitative Kinematics
+
+                             Ali Asghar Manjotho, Tekie Tsegay Tewolde, Zhendong Niu
+
+   Abstract--Human motion understanding is fundamental to                     focused on direct mapping from semantics to raw motion
+various applications in computer graphics, human-robot inter-                 [8] (high-level), learning motion latent space (low-level) [8],
+actions, digital environments, and smart healthcare. Existing                 [9], and intermediate motion representations (mid-level) [4],
+approaches predominantly rely on quantitative and qualitative                 [10]­[12]. The considerable gap between raw human motion
+kinematic facts for motion modeling. However, they often struggle             and action semantics presents challenges when attempting
+to establish a robust connection between motion and correspond-               direct mapping. However, intermediate representations have
+ing action semantics. This is primarily attributed to the use of              shown promising progress in addressing the semantic gap
+inadequate motion representations and presence of uncertainties               through the use of quantitative and qualitative kinematics.
+in kinematic hierarchies. We propose a novel fuzzy qualitative                Quantitative kinematics relies on real-valued pose geometry to
+kinematics (FQK) approach to effectively bridge action semantics              model spatio-temporal dependencies in the underlying motion.
+and human motion. Our approach exploits the fusion of fuzzy                   In contrast, qualitative kinematics employs linguistic symbols
+inference and qualitative reasoning to model expressive, complex,             as kinematic facts to express the relationships between the
+and uncertain kinematic facts. First, we construct fuzzy linguistic           spatial and temporal components of motion.
+vocabulary and membership functions for motion attributes.
+Second, we extract novel fuzzy qualitative tokens (FQTs) from                    Recently, qualitative representations of human motion have
+motion sequences by employing FQK to represent various motion                 been identified as a promising solution for conveying effective
+attributes across different motion components. Third, we propose              kinematic cues [13]. Different qualitative schemes have been
+a dual-branch adaptive neuro-fuzzy inference (D-ANFI) block.                  proposed, including pose tokens [10], [11], motion descrip-
+The D-ANFI block learn two data representations in parallel: the              tors [12], global/local motion cues [14]­[16], and kinematic
+fuzzy inference module learns membership functions and rule-                  phrases [4]. These approaches employ boolean kinematic
+base, while DNN module learns the motion features. Thereafter,                facts to encode motion semantics, such as "Is the right foot
+the feature fusion module combines the two representations to                 behind the left foot?" or "Is the right leg bent?". However,
+effectively represent the motion semantics. Forth, we demonstrate             these representations are limited in expressing human skele-
+the effectiveness of the proposed approach by integrating FQTs                ton geometry. Moreover, they often neglect simple motion
+and D-ANFI block a unified unified motion understanding                       dynamics (such as amplitude and velocity changes) and fail
+system to account various human motion tasks, including motion                to account for inherent uncertainties in the underlying motion.
+interpolation, prediction, and generation. Finally, we introduce              Consequently, connecting action semantics and raw motion
+expressive and intuitive kinematic text prompts to perform fine-              remains a persistent challenge.
+grained text-to-motion translation based on FQTs. Extensive
+experiments on HumanML3D and KIT-ML benchmark datasets                           To this end, we propose a fuzzy qualitative kinematics
+validate the superiority of our approach over existing schemes.               (FQK) approach to establish robust connections between raw
+                                                                              motion and action semantics. Our approach integrates qual-
+   Index Terms--Human motion generation, automated anima-                     itative reasoning with fuzzy logic to offer fuzzy qualitative
+tions, motion semantics, fuzzy reasoning, qualitative kinematics.             tokens (FQTs) as plausible intermediate motion representation.
+                                                                              FQTs concentrate on fuzzy uncertain kinematic facts that
+                          I. INTRODUCTION                                     are typically overlooked by general action semantics, such
+                                                                              as "left hand moves forward slightly then moves backward
+H UMAN motion understanding is integral to nu-                                quickly" or "right leg is slightly bent inwards and the knee
+       merous applications, including human-robot interac-                    is closer to the right hip". Our approach adopts fuzzy kine-
+tion, automated computer animations, social humanoid in                       matic trigonometry [17], which transforms ordinary translation
+augmented/virtual reality, intelligent non-playing characters                 and orientation Cartesian spaces into a unit circle and uses
+(NPCs) in video games, physical fitness, sport analysis, and                  membership functions to represent kinematic facts as fuzzy
+digital film production [1]­[3]. The fundamental challenge                    values. Unlike boolean motion directional changes, these fuzzy
+lies in establishing a meaningful connection between the raw                  values additionally encompass changes in motion amplitudes
+motion space and action semantic space [4]. Conventionally,                   and velocities. Importantly, we predetermine the linguistic
+motion is represented as a sequence of 3D poses [5] or SMPL                   variables for kinematic facts to provide flexible fuzzy intervals
+model parameters [6], [7], while action semantics are charac-                 that balance motion accuracy and computational complexity.
+terized by action categories or textual descriptions in natural               Using FQTs as an intermediate representation, we first ex-
+language. Recent advances in the field have predominantly                     tend existing datasets to unify the motion knowledge base.
+                                                                              Subsequently, we developed a motion understanding system
+   Corresponding author: Zhendong Niu (email: zniu@bit.edu.cn)
+   Ali Asghar Manjotho, Tekie Tsegay Tewolde, and Zhendong Niu are
+with the school of Computer Science and Technology, Beijing Institute of
+Technology, China. (email: ali.manjotho@bit.edu.cn, tekie.tsegay@bit.edu.cn,
+zniu@bit.edu.cn)
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024  2
+
+with FQT mediation by learning a joint motion-text-FQT            of parametric body models, as demonstrated in [6], has
+latent space in a self-supervised manner. We then adopted         enabled a more accurate depiction of the human body.
+it for multiple motion understanding tasks, including motion      Besides, a number of methods have also explored the
+interpolation, prediction, and generation.                        use of intermediate motion representation. For instance,
+                                                                  "posebits" were introduced in [10] as boolean pose tokens to
+   Four key advantages of FQTs are highlighted: First, FQTs       capture the geometric relationships between different body
+effectively capture the amplitudes, velocities, and sign changes  joints. These posebits were extracted using joint distances,
+of different motion attributes. Second, FQTs model uncertain-     articulation angles, and joint relative positions. Another
+ties in the underlying motion attributes while maintaining a      approach, "posescript," was proposed in [11] as an extension
+balance between motion quality and computational complex-         to posebits, which employs fine-grained categorical values
+ity. Third, FQTs facilitate the disentanglement of kinematically  to extract relationships between different body parts and
+similar yet semantically different motion sequences, such as      represent motion semantics in a natural language. In [12],
+various walking styles. Finally, FQTs are general, as they can    SDQIO was proposed as a feature set for representing
+be automatically extracted from different modalities of human     action semantics, capturing five features: steered, diversion,
+motion, including 3D skeletons and SMPL parameters.               quadrangular, intricacy, and obscurity. Furthermore, [14]
+                                                                  represented motion as aggregated local and global motion
+   The fuzzy inference module reduces the uncertainty present     features extracted through multi-path displacement estimation
+in various qualitative kinematic facts. Most of the existing      and motion cues. Long-range dependencies were extracted
+methods need to use DNN as state representation to approx-        using human motion trajectories and graph grouping in [15],
+imate value function. Although DNNs have shown excellent          [16] and were finally fused to obtain rich motion cues.
+performance, but often struggle to model uncertainty present in   Phase functions [19] and learned motion words [20] were
+the data and often fall for local optima. Hence, we use Fuzzy     also explored, although limited to specific actions such as
+Deep neural Network (FDNN) with 2S-FDNN blocks. The               locomotion and dancing. Notably, [21] extended posebits
+fuzzy inference general function approximation, which could       to propose rich categorical kinematic phrases (KPs) as
+approximate any mapping from input data to output data with       abstract, interpretation, and general motion representations.
+arbitrary precision.                                              Although KPs hold richer semantics, they lose much of the
+                                                                  semantics when translating joint orientations and positions
+   D-ANFI block was proposed, which adopts a parallel struc-      into categorical descriptors using thresholding. Hence,
+ture for feature learning from two different perspectives simul-  in contrast to thresholding, we propose fuzzy qualitative
+taneously. The proposed model can overcome the problem of         tokens to extract rich motion semantics by employing fuzzy
+poor generalization ability due to uncertain communication        membership functions and qualitative kinematic trigonometry.
+policy and a lot of noisy observation in communication
+channel.                                                          Human Motion Generation. Human motion generation aims
+                                                                  to produce realistic motion sequences for individuals or in-
+   In order to learn the membership functions ability and         teractions involving humans and objects. Existing methods
+create fuzzy rule-base, we combine fuzzy logic inference with     for motion generation can be categorized as regressive and
+artificial neural network, and propose an adaptive fuzzy neural   generative [22]. Regressive methods involve learning direct
+network [REF]. Adaptive fuzzy neural network is composed          mapping using input features along with a conditional signal,
+of the following five parts. 1) input layer; 2) membership        typically through a supervised technique. In contrast, gener-
+function layer; 3) rule layer; 4) normalization layer; 5) fuzzy   ative methods aim to learn the conditional joint distribution
+representation layer                                              of motion sequences in an unsupervised manner. In this
+                                                                  context, a range of generative models have been proposed, in-
+   The contributions of this study are as follows:                cluding variational autoencoders (VAEs) [23]­[25], generative
+                                                                  adversarial networks (GANs) [26], [27], denoising diffusion
+   1) We propose FQTs as an intermediate representation to        probabilistic models (DDPMs) [28], [29], normalizing flows
+       bridge the gap between motion and action semantics.        [30], [31], and motion graphs [32], [33]. Typically, the human
+                                                                  motion generation task is conditioned on various factors such
+   2) We develop a novel unified motion understanding system      as text [34], [35], audio [36], [37], scene [38], [39], kinematic
+       that utilizes FQTs and an aggregated large-scale knowl-    control [40], or another motion sequence [41]­[43]. Other
+       edge base.                                                 works [44], [45] try to synthesize the motion by re-targeting
+                                                                  motion styles between different kinematic structures.
+   3) We introduce intermediate linguistic variable sets for
+       the three quantities, i.e., changes in motion directions,
+       amplitudes, and velocities, to provide a balance between
+       precision and computational complexity.
+
+   4) Our method supports fine-grained motion modification
+       through FQT modification and kinematic prompt gener-
+       ation.
+
+                         II. RELATED WORK                                                      III. METHOD
+
+Human Motion Representation. An accurate representation           Effective mapping between the action and motion spaces is key
+of human motion is critical for generating realistic motion       to the success of any task involving motion. Fig. 1 visually
+sequences [18]. Conventional motion is typically represented      demonstrates the semantic gap between these two modalities.
+as a sequence of static pose representations characterized        We propose a fuzzy qualitative kinematic approach to seam-
+by joint positions or limb rotations. The introduction            lessly connect action semantics and raw motion. To achieve
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024                                                                    3
+
+ Raw                                                Fuzzy Qualitative                      Action
+Motion                                                                                   Semantics
+                                                        Kinametics
+                           Fuzzy Qualitative Token                                       Running
+                              Extractor (FQTE)       FLLAT
+                                                     FJLAT                                                       Running
+                                                     FJJAT                                                       Sprinting
+                                                     FJJDT
+                                                     FLJDT                                                            ...
+                                                    FLLDT
+                                                                                                                  Walking
+                                                      FJDT                                                     Approaching
+                                                      FLDT
+                                                    FLADT                                                             ...
+                                                       FJVT
+                                                       FLVT                                                      Jogging
+                                                                                                               Sauntering
+     Motion Space                                                                        Action Space
+                                                                                                                     ...
+    Raw Motion
+A person is running
+
+                     FQTE                                                                VS
+
+Fig. 1. (Top) Illustrates the gap between two motion modalities, i.e., raw motion and action descriptions. Understanding human motion requires modeling a
+complex many-to-many mapping function between motion and action spaces. Fuzzy Qualitative Tokens (FQTs) are presented as an intermediate representation
+to bridge the gap (bottom) comparison of boolean kinematic facts used by previous studies [4], [10], [11] with our FQTs. FQTs provide expressive pose
+geometry and rich semantic information.
+
+this, we begin by defining fuzzy membership functions, fuzzy           B. Fuzzy Membership Function
+linguistic vocabulary, and qualitative state functions for various
+motion attributes. Subsequently, we formulate fuzzy quali-             The fuzzy membership function associates the degree of
+tative tokens as intermediate representations to extract rich
+and expressive motion semantics from different kinematic               member for input crisp values x belonging to a certain
+hierarchies.
+                                                                       fuzzy set. The function acts as a approximator denoted as
+A. Fuzzy Linguistic Vocabulary
+In our proposed approach, we initially establish fuzzy linguis-        µ : x  [0, 1]. We use an standard gaussian membership
+tics to translate quantitative attributes into their corresponding
+qualitative attributes. Specifically, we identify three types of       function to model uncertainty for different motion attributes
+attributes for different components (joints or limbs): distance,
+angle, and velocity. We then translate the normalized quantita-        in the motion sequence as shown in Fig. 2. The standard
+tive number scale into a qualitative scale for all three attributes.
+These linguistic sets for these attributes are defined in eq (1),      fuzzy membership function assigns membership scores to crisp
+(2), and (3), respectively.
+                                                                       input values. The standard Gaussian membership functions
+   lingd  {zero, very-small, slightly-small, small,
+                               slightly-large, large, very-large} (1)  represented by the three-tuple µg, g2, m is defined by eq
+
+   ling  {completely-bent-in, largely-bent-in,                         (4).                          x - µg m
+            slightly-bent-in, straight, slightly-bent-out,                                             g2
+                      largely-bent-out, completely-bent-out} (2)             µ(x) = exp    1                                (4)
+                                                                                         -
+       lingv  {steady, slower, slow, normal, fast, faster} (3)
+                                                                                           2
+
+                                                                          Where µ(.) is the Gaussian membership function; x denotes
+                                                                       the crisp value; m is the fuzzification factor; µg and g2 are
+                                                                       the mean and variance of Gaussian function, respectively.
+
+                                                                       C. Fuzzy Qualitative States
+
+                                                                       We replace the conventional Cartesian translation (distance)
+                                                                       and orientation (angle) within the unit circle with a quantized
+                                                                       fuzzy membership function, as shown in Fig. 3(b). Specifically,
+                                                                       we determine the position state of a fuzzy qualitative point
+                                                                       based on its projections onto the fuzzy qualitative axes embed-
+                                                                       ded within the fuzzy qualitative unit circle. Any quantitative
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024                                                            4
+
+        Three-Tuple Gaussian Membership Function                                state at the tth frame are determined using eq (8) and (9),
+1.0                                                                             respectively.
+
+                                                                                t(j,k,l) = arccos ukt - utj , ult - utj              (8)
+
+                                                                                   F     LLAT    (j,k,l)    =  µ (t(j,k,l) )         (9)
+                                                                                                 t
+
+0.5                                                                             Fuzzy Joint-Limb Angle Token (FJLAT) signifies the angle
+                                                                                between the limb (uj, uk) and the unit vector normal to the
+0                                                                               the segment connecting joints u0 and ul. Let n be the normal
+                                     0                                          vector with respect to the reference vector rt. The crisp angle
+                                                                                and FJLAT state at the tth frame are determined using eq (10)
+
+                                                                                and (11), respectively.
+
+Fig. 2. The graphical representation of 3-tuple fuzzy membership functions      t(j,k,l,) = arccos             ukt  -  ujt ,   n     (10)
+with overlapping fuzzy intervals for distance, angle, and velocity attributes.                                                n
+
+                                                                                F  LLAT         (j,k,l,)    =  µ (t(j,k,l,) )        (11)
+                                                                                                t
+
+distance, angle, or velocity attribute is then represented as the               Fuzzy Joint-Joint Angle Token (FJJAT) represents the angle
+qualitative state, which is denoted by a pair of corresponding                  between the line segment, connecting joint uj and uk, and
+linguistic variable and membership score. These are expressed
+in eq (5), (6), and (7).                                                        the forward reference vector rf . The crisp angle and FJJAT
+                                                                                state at the tth frame are determined using eq (12) and (13),
+     QSd(d) = {{ld, µd(d)}}, ld  lingd            (5)
+                                                                                respectively.
+
+     QS() = {{l, µ()}}, l  ling                   (6)                           t(j,k,rf ) = arccos ukt - ujt , rf                   (12)
+
+     QSv(v) = {{lv, µv(v)}}, lv  lingv            (7)                                           (j,k,rf  )     µ(t(j,k,rf ))
+                                                                                                t
+                                                                                F  J     J  AT              =                        (13)
+
+   Where QSd(.), QS(.), and QSv(.) represent the qualitative                    Fuzzy Joint-Joint Distance Token (FJJDT) represents the
+state functions for distance, angle, and velocity, respectively.                distance between two joints uj and uk. The crisp distance and
+The variables d, , and v denote the quantitative distance,                      FJJDT state at the tth frame are calculated using eq (14) and
+angle, and velocity, respectively. While ld, l, and lv are the
+linguistic variables for distance, angle, and velocity, respec-                 (15), respectively.
+tively.
+                                                                                            d(tj,k) = utj - utk22                    (14)
+
+D. Fuzzy Qualitative Tokens (FQTs)                                                 F     J  J  DT  (j,k)    =  µd(dt(j,k))           (15)
+                                                                                                   t
+We introduce novel fuzzy qualitative tokens to extract seman-
+tically plausible motion features from different kinematic hier-                Fuzzy Limb-Joint Distance Token (FLJDT) represents the
+archies. Building upon the concept of Kinematic Phrases (KP)                    distance between the center of limb (uj, uk) and joint ul. The
+[4], we extend the idea to represent motion semantics as fuzzy                  crisp distance and FLJDT state at the tth frame are calculated
+qualitative states concerning changes in motion directions,
+magnitudes, and velocities. While the quantitative magnitudes                   using eq (16) and (17), respectively.
+increase complexity and potentially lead to model overfitting,
+our approach offers a comprehensive representation. There                                              ujt  - utk             2
+are 11 FQTs comprising six pose-centric tokens (as shown                                                    2
+in Fig. 3 (e)), focusing on postures in individual frames, and                     d(tj,k,l) =                      - ult            (16)
+five motion-centric tokens (as shown in Fig. 3 (f)), capturing                                                                       (17)
+changes between two consecutive frames.                                                                                       2
+
+   Moreover, we construct three reference vectors pointing                         F     LJ  DT  (j,k,l)    =  µd(dt(j,k,l))
+in the right, forward, and upward directions. The vector                                         t
+pointing from the left to the right hip joint is designated
+as the right vector rr, the upward vector ru points in the                      Fuzzy Limb-Limb Distance Token (FLLDT) represents
+opposite direction to the floor plane, and the forward vector                   the distance between the centers of two limbs (uj, uk) and
+is calculated as rf = rr × ru perpendicular to the other                        (ul, um). The crisp distance and FLLDT state at the tth frame
+two vectors. The reference vectors at a specific frame t are
+represented as rt.                                                              are calculated using eq (18) and (19), respectively.
+
+Fuzzy Limb-Limb Angle Token (FLLAT) serves as a rep-                            dt(j,k,l,m) =    ujt - ukt - utl - utm 2             (18)
+resentation of the joint angle between two adjacent limbs,                                               2             2             (19)
+specifically (uj, uk) and (uj, ul). The crisp angle and FLLAT                                                                     2
+
+                                                                                F  LLDT        (j,k,l,m)    =  µd(dt(j,k,l,m))
+                                                                                               t
+
+                                                                                Fuzzy Joint Displacement Token (FJDT) accounts for di-
+                                                                                rectional displacement of joint uj in two consecutive frames
+                                                                                t and t - 1. The crisp displacement and FJDT state at the tth
+
+                                                                                frame are determined by eq (20) and (21), respectively.
+
+                                                                                d(tj) =     ujt - u0t  2       ujt-1 - ut0-1      2  (20)
+                                                                                                                                  2
+                                                                                                         -
+
+                                                                                                       2
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024                                                                                                             5
+
+                                           Fuzzy Qualitative Unit Circle                         Membership Functions                                  Fuzzy Qualitative Tokens
+                                                        Slightly bent                                                                            FLLAT
+Motion Sequence                                                                                                                                  FJLAT
+                                                                 y                                                                               FJJAT
+                                                                                                                                                 FJJDT
+                       Moderately bent              1.0                                                                                          FLJDT
+                                                    0.5                                                                                          FLLDT
+
+                                              -1.0 -0.5 0                      x     No bending                                    Extract         FJDT
+                                                          -0.5  0.5 1.0                                                                            FLDT
+                                                                                                                                                 FLADT
+                                                    -1.0            Cboemntpleletly                                                                FJVT
+                                                                                                                                                   FLVT
+
+                                                    Nearly bent
+
+Fuzzy Limb-Limb Angle                   Fuzzy Joint-Limb Angle      Fuzzy Joint-Joint Angle                    Fuzzy Joint-Joint       Fuzzy Limb-Joint        Fuzzy Limb-Limb
+      Token (FLLAT)                           Token (FJLAT)               Token (FJJAT)                    Distance Token (FJJDT)  Distance Token (FLJDT)  Distance Token (FLLDT)
+
+Fuzzy Joint Displacement                          Fuzzy Limb Displacement                                Fuzzy Limb Angle    Fuzzy Joint Velocity Token    Fuzzy Limb Velocity Token
+        Token (FJDT)                                      Token (FLDT)                           Displacement Token (FLADT)                (FJVT)                        (FLVT)
+
+Fig. 3. (a) Motion as pose sequence (b) fuzzy unit circle for distance and angle (c) fuzzy membership functions for distance, angle, and velocity attributes
+(d) visualization of fuzzy qualitative token (e) visualization of FLLAT, FJLAT, FJJAT, FJJDT, FLJDT, and FLLDT tokens (f) visualization of change in FJDT,
+FLDT, FLADT, FJVT, and FLVT tokens across two consecutive frames t and t - 1.
+
+                       F                J  DT  (j)  =  µd(d(tj))                                 (21)      (uj, ul) in two consecutive frames t and t-1. The crisp change
+                                               t                                                           in angle and FLADT state at the tth frame are determined by
+
+Fuzzy Limb Displacement Token (FLDT) accounts for the                                                      eq (24) and (25), respectively.
+directional displacement of limb (uj, uk) with respect to the
+reference vector rt in two consecutive frames t and t - 1.                                                 t(j,k,l) = arccos utk - utj , utl - utj -
+The crisp displacement and FLDT state at the tth frame are
+                                                                                                                             arccos utk-1 - utj-1, ult-1 - ujt-1                 (24)
+determined by eq (22) and (23), respectively.
+
+                 ujt      utk                       2                                                                                      (j,k,l)       µ (t(j,k,l) )
+                                                                                                                                           t
+dt(j,k,) =             -                   ,  rt       -                                                                     F     LADT             =                            (25)
+                       2
+                                                    2
+                                                                                                           Fuzzy Joint Velocity Token (FJVT) measures the changes in
+                                                       utj-1     -  utk-1         ,  rt-1        2         speed for joint uj in relation to the reference vector rt. The
+                                                                 2                                         crisp velocity and FJVT state at the tth frame are determined
+                                                                                                     (22)
+                                                                                                           by eq (26) and (27), respectively.
+                                                                                                 2
+                 F    LDT                  (j,k,)   =  µd(dt(j,k,))                                        vt(j,) = ujt - u0t , rt - utj-1 - u0t-1, rt-1                         (26)
+                                           t                                                         (23)
+
+Fuzzy Limb Angle Displacement Token (FLADT) accounts                                                                               FJV  T  (j,)  =  µv (vt(j,) )                 (27)
+for the signed change in angle between two limbs (uj, uk) and                                                                              t
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024         6
+
+                                                                           Align
+                                                                           Align
+
+Fig. 4. (left) Dual-branch adaptive neuro-fuzzy inference block to capture uncetainities and motion features with in FQTs. (right) A unified human motion
+understanding system. During training, we encode FQTs, motion and text through their respective transformer encoders, together with modal-specific learnable
+distribution tokens. Each encoder outputs Gaussian distribution parameters, subject to KL losses, from which a latent vector z is sampled. The decoder uses
+the sampled variable to interpolate, predict, and generate a motion sequence.
+
+Fuzzy Limb Velocity Token (FLVT) measures the changes              3) Fuzzy inference
+in speed for limb (uj, uk) in relation to the reference vector     4) Defuzzifier
+rt. The crisp velocity and FLVT state at the tth frame are         The fuzzifier uses the membership function which
+                                                                calculates the membership degree of the input data belonging
+determined by eq (28) and (29), respectively.                   to a certain fuzzy set to fuzzify the input data. The knowledge
+                                                                base consists of a database of fuzzy sets and a rule base
+vt(j,k,) =  ukt - ukt-1, rt  -  ujt - ujt-1, rt-1               containing many fuzzy "if-then" rules and has the following
+                                                                form:
+            2                   2                  (28)
+                                                   (29)         Rule l: IF X1 is S1l , . . . , and Xn is Snl THEN Y1 is O1l
+            F LV  T  (j,k,)  =  µv (vt(j,) )                    , . . . and Ym is Ol
+                     t
+                                                                   Where Xi(i = 1, . . . , n) represents the ith input linguistic
+Specifically, for each frame, we collect 11 FLLATS, 14          variable of the fuzzy inference system; Sil represents ith
+FJLATs, 195 FJJATs, 14 FJJDTs, 28 FLJDTs, 182 FLLDTs,           fuzzy set of the ith fuzzy rule; Y i(i = 1, . . . , m) represents
+182 FJDTs, 10 FLDTs, 14 FLADTs, 45 FJVTs, and 14 FLVTs.         the ith output variable of the fuzzy inference system; Oil
+                                                                represents the language term of the ith output variable of the
+E. Fuzzy Qualitative Token Extractor (FQTE)                     lth fuzzy rule. Fuzzy inference is used to get fuzzy outputs and
+                                                                defuzzifier converts fuzzy outputs into crisp value. Adaptive
+The FQTE module takes in a motion sequence M 1:T and            fuzzy neural network has fast nonlinear fitting ability, and
+extracts ten different types of FQTs {F QTq,t}qQ=,T1,t=1 for    mainly composed of the following five parts.
+each joint and limb in each frame t. Notably, a single token
+is generated per dimensional component, resulting in three         1) input layer
+tokens for each orientation and positional attribute. Where        2) membership function layer;
+Q denotes the number of unique tokens, and T denotes the           3) rule layer;
+sequence length.                                                   4) normalization layer;
+                                                                   5) fuzzy representation layer [12]
+F. Fuzzy Learning
+                                                                G. Constructing Fuzzy Qualitative Token Base
+Fuzzy logic inference is suitable for representing human
+knowledge in a specific application domain and using this       We constructed a comprehensive knowledge base for general
+knowledge to reason in order to make useful decisions. It can   human motion understanding tasks. Each sample encompasses
+be used as function approximator in large-scale continuous      fuzzy qualitative tokens, motion sequence, textual informa-
+state spaces. Fuzzy logic inference consists of the following   tion, 3D skeleton annotations, and SMPL parameters. We
+four parts.
+
+   1) Fuzzifier
+   2) Knowledge base
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024                                 7
+
+then aligned the axes and resampled the sequences at a rate      the reconstructed motion serves as a general sequence
+of 30Hz. Subsequently, the FQTs were extracted from the          representing the interpolated, predicted, or generated motion.
+transformed 3D skeleton sequences, and any associated text
+annotations or action labels were directly copied. Finally,      Training Strategy. We employed three objective functions to
+we compiled large-scale text-motion datasets sourced from        guide the model during training: reconstruction loss, KL diver-
+HumanML3D [46] and KIT-ML [47].                                  gence loss, and embedding alignment loss. The reconstruction
+                                                                 loss is presented in eq (30).
+H. Motion Understanding via FQTs
+                                                                           LR = L2(M, M^ )                (30)
+To rigorously evaluate our FQT approach, we applied it to
+various motion understanding tasks, including human motion       Where L2(.) denotes the L2 mean square error between
+interpolation, prediction, and generation. For these tasks, we   the groundtruth and predicted values. The KL divergence
+adopted a unified approach to comprehend human motion by         encourages the three encoders to learn symmetric latent spaces
+utilizing a single model to learn the motion semantics to infer  across three modalities and is presented in eq (31).
+all three tasks.
+                                                                 LKL = KL(NtN ) + KL(NmN ) + KL(Nf N )+
+Motion Interpolation. Consider an arbitrarily masked pose                                  KL(NtNm) + KL(NmNf ) (31)
+sequence Mm  RT ×K×3, where T denotes the sequence
+length and J is the number of joints describing each pose. The   Where KL(.) is the Kullback-Leibler divergence between the
+objective is to recover the missing regions M^u and generate a   two distributions. N = N (0, I) denotes the standard normal
+full consecutive sequence M^ = {Mm, M^u}. During training,       distribution. The embedding loss is presented in eq (32).
+the masked pose sequence was obtained by applying a mask
+to the groundtruth as Mm = M SK  M . Where Mu = (1 -                       LE = L1(zf , zm) + L1(zm, zt)  (32)
+M SK)  M is the groundtruth complementary region and
+M SK refers to the binary mask applied to the sequence.          Where L1(.) denotes the L1 loss between the two embeddings
+Motion Prediction. Given a partially observed motion Mi          after sampling. The resulting total loss is defined as a weighted
+in a pose sequence, the goal is to synthesize a plausible and    sum of the three terms: L = LR + KLLKL + ELE.
+realistic pose sequence M^ = {Mi, M^u} without losing prior
+knowledge of the input key frames.                                                IV. IMPLEMENTATION DETAILS
+Motion Generation. Given a text t  {W1, . . . , WN } as a
+sequence of N words, the objective is to predict the motion      We trained our model for 5K epochs using a minibatch size
+sequence M^ corresponding to t.                                  of 32. The network weights were initialized randomly and
+                                                                 optimized using an AdamW optimizer. The initial learning
+I. Unified Model Structure                                       rate was set to  = 10-5 and decayed gradually with the
+                                                                 Step LR scheduler with a step size of 8 and decay rate
+Model Structure. Inspired by [48], we adopted a unified          of 0.99. Moreover, the penalizing hyperparameters were
+approach for motion understanding tasks, as shown in             empirically set to KL = 10-4 and E = 10-5. Our
+Fig. 4. Our model employs a transformer-based variational        transformer encoders and decoders consist of 6 layers for
+autoencoder (VAE) network together with self-attention,          each of the three encoders and decoder. Further, the latent
+cross-attention, and modal-specific learnable distribution       space dimension d was chosen as 512. No data augmentation
+tokens. Initially, we randomly mask the groundtruth motion       techniques were applied to any of the dataset. We utilized
+M and fuzzy qualitative tokens F along with the curriculum       HumanML3D and KIT-ML training sets for training and
+learning strategy [49]. The strategy gradually increases the     held out test sets for validation on a single NVIDIA
+masking ratio and encourages the model to learn the missing      3080 Ti GPU. All the sequences were resampled at a rate of
+components effectively. Randomly masked motion Mmsk and          15Hz with the sequence length ranging from 20 to 225 frames.
+masked tokens Fmsk are then provided to the two encoders.
+Furthermore, the action labels/text are passed through a         FQT-intervened Motion Interpolation. First, the incomplete
+text encoder Et utilizing a frozen pretrained DistilBERT         motion sequence Mm is passed as a masked sequence to obtain
+model [50]. The encoders Ef , Em, and Et jointly learn the       two distribution variables: zf = Ef (Mm) and zm = Em(Mm).
+token, motion, and action space, yielding the distribution       The interpolated motion is then predicted by the motion
+parameters (µf , m2 ), (µm, m2 ), and (µt, t2), respectively.    decoder as M^ = Dm(zf , zm).
+Subsequently, three variables (zt, zm, and zf ) are sampled      FQT-intervened Motion Prediction. Motion prediction in our
+from these distributions, constituting a joint sample variable   model works similarly to interpolation, with the exception that
+z using the reparametrization trick [51]. During training,       all masked poses follow the observed poses in the sequence.
+the variable z considers all three sample variables, while       FQT-intervened Motion Generation. First, the given text t
+during inference, various combinations of these variables        is passed through the text encoder to obtain the distribution
+are designated to z depending on the human motion task.          variable zt = Et(t). We then pass the entirely masked motion
+The decoder Dm employs the sampled variable to produce           sequence to the motion encoder to obtain another distribution
+reconstructed motion M^ . Depending on the arbitrary input,      variable, zm = Em(Mm). The generated motion is then
+                                                                 predicted by the motion decoder as M^ = Dm(zm, zt).
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024                                                             8
+
+                                      TABLE I                     Frechet Inception Distance (FID). The FID metric is widely
+A SAMPLE OF TEXT PROMPTS CONVERTED FROM FQTS WITH FUZZY           used to evaluate the overall quality of the generated motion
+                                                                  samples. It measures the similarity between the distribution of
+          KINEMATIC CUES REPLACED BY VARIOUS PHRASES.             real motion and generated motion in a feature space. Lower
+                                                                  FID values indicate better motion quality.
+FQT                     Text prompt sample                        Diversity. Diversity measures the richness and variance of
+FJAT              Left knee is slightly bent-in.                  the generated motions across all descriptions. Initially, two
+FPAT        Right hand is perpendicular to pelvis.                randomly selected subsets of the same size, Sd, are taken from
+FJDT           Distance between the feet is large.                the entire set of generated motions and their corresponding
+FRDT   Right foot is extended largely away from body.             descriptions. Then, their respective sets of motion feature
+FDT     Left shoulder translates largely towards left.            vectors {v1, . . . , vSd } and {v1 , . . . , vS d } are extracted. The
+FPRDT        Left arm translates slightly upwards.                diversity of the motion is then determined as:
+FPDT   Left hand and right foot become slightly apart.
+FLAT                                                                                     1   Sd
+FLOT                     Left leg bends-out.                                             Sd
+FJVT      Right upper arm goes vertical to pelvis.                                               vi
+
+                Head moves quickly backwards.                                                i=1
+
+                                                                           Diversity  =              - vi, where  Sd  =   300.
+
+             V. KINEMATIC PROMPT GENERATION                       MultiModality. The multimodality of a given set of mo-
+
+Drawing inspiration from [4], we introduce the extended           tions measures the level of diversification within each text
+kinematic prompt generation (KPG). It aims to improve the
+interpretability and objectivity of kinematic facts within a      description. To calculate this, we first randomly select two
+motion sequence. Extended KPG leverages FQTs, as opposed          subsets of equal size, Sm, from a set of motions with C
+to KPs, to generate motion from text prompts that include         descriptions. From each subset, we then obtain two separate
+kinematic facts as motion cues. To simplify the prompt, we        sets of feature vectors, {vc,1, . . . , vc,Sd } and {vc,1, . . . , vc,Sd },
+transform FQT tokens into various English verbs, adverbs,         from each subset. The multimodality of the motion set is
+and prepositions, representing qualitative states for distance,
+angle, and velocity as textual descriptions. We constructed a     defined as:
+dataset of 1548 text prompts, where the FQTs were seamlessly
+integrated with kinematic facts to produce a comprehen-           M.M od.  =  C   1       C   Sm   vc,i  -  vc ,i, where  Sm  =  10.
+sive representation of motion. A subset of these prompts is                      × Sm    c=1  i=1
+presented in Table. I for reference. To convert FQTs into
+corresponding text prompts, we adopt a strategy similar to        Accuracy. The accuracy of a model measures how well the
+that proposed by [4].
+                                                                  generated samples align with the expected action label or text
+                         VI. EXPERIMENTS
+                                                                  description, particularly in text-to-motion tasks. It provides a
+A. Datasets
+                                                                  broad overview of how closely the generated motions match
+HumanML3D. HumanML3D [46] is a comprehensive 3D
+human motion-language dataset that encompasses a diverse          the corresponding texts.
+array of human actions, including walking, jumping, swim-         R-Precision. R-Precision is a measure of the alignment be-
+ming, playing golf, cartwheel, and dancing, among others.         tween the generated motions and their accompanying descrip-
+Each motion clip is accompanied by three to four single-          tions. This is determined by evaluating the relevance of the
+sentence descriptions. The motions have been downsampled to       top-k ranked items. The precision at the first, second, and third
+20 frames per second (fps), with each clip duration spanning      ranks is referred to as top-1, top-2, and top-3, respectively.
+from 2 to 10 seconds. In total, the dataset contains 14,616       The R-Precision metric calculates and ranks the Euclidean
+motions and 44,970 descriptions, featuring a vocabulary of        distances between the features and then averages the accuracy
+5,371 distinct words. The total length of motions amounts to      of the top-k results, providing a detailed assessment of the
+28.59 hours. The average motion length is 7.1 seconds, while      consistency between text and motion.
+the average description length is 12 words. HumanML3D data
+adheres to 22 joint SMPL skeleton structure.                      C. Baselines
+KIT Motion-Language (KIT-ML). KIT-ML [47] comprises
+3,911 human motion sequences complemented by 6,278 tex-           We evaluate our model against existing state-of-the-art (SOTA)
+tual descriptions. The total vocabulary size, excluding capital-  methods for human motion interpolation, prediction, and gen-
+ization and punctuation, is 1,623 words. Each motion sequence     eration tasks. Specifically, we compare the effectiveness of our
+is accompanied by one to four sentences with an average           unified approach with [52], [53], [54], [55], [56], [4], [8], and
+description length of approximately 8 words.                      [57]. Chen et al. [52] proposed a motion latent-based diffusion
+                                                                  model that converts the raw motion into latent representation
+B. Evaluation Metrics                                             and applies a diffusion process on the latent space for human
+                                                                  motion generation. Tevet et al. [53] introduced a motion diffu-
+We employ the following evaluation metrics to assess the          sion model for human motion synthesis from text and action
+model based on generated text and motion features.                labels. Guo et al. [54] adopted a two-stage approach to human
+                                                                  motion generation from text. In the first stage, it predicts
+                                                                  the length of the motion from the text, and in the second
+                                                                  stage, it generates the corresponding motion. Jiang et al. [55]
+                                                                  proposed a unified motion language model for various human
+                                                                  motion tasks. Liu et al. [4] introduced kinematic phrases as
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024                                                              9
+
+                                                                                         TABLE II
+  QUALITATIVE EVALUATION OF THE PROPOSED METHOD VS. SOTA ON THE HUMANML3D AND KIT-ML DATASETS. "  ": INDICATES HIGHER IS
+BETTER, "  ": INDICATES LOWER IS BETTER, AND "  ": INDICATES VALUES CLOSER TO GROUND-TRUTH ARE BETTER. BOLD SPECIFIES THE BEST
+
+                                                         RESULT. UNDERLINE SPECIFIES THE SECOND BEST RESULT.
+
+                  Motion Interpolation                            Motion Generation                               Motion Prediction
+                FID() Diversity ()                                                                            FID () Diversity ()
+     Method                             R-Precision ()            FID () Diversity ()  Multimodality ()
+
+Groundtruth                             Top-1  Top-2  Top-3                                     -
+MLD [52]                                                                                      2.413
+MDM [53]                                0.511  0.703    HumanML3D                             2.799
+T2M [54]                                0.481  0.673                                          2.090
+MotionGPT [55]  0.002  9.503            0.320  0.498  0.797 0.002          9.503              2.008           0.002      9.503
+TM2T [56]         -      -              0.457  0.639                       9.724              2.424             -          -
+KP-VAE [4]                              0.492  0.681  0.772 0.473          9.559              2.065
+TEMOS [8]       2.698  8.420            0.424  0.618                       9.188              0.368           6.031      7.813
+T2M-GPT [57]      -      -              0.475         0.611 0.544          9.528              1.856             -          -
+Ours                                    0.424    -                         8.589              3.519
+                0.214  9.560            0.491  0.612  0.740 1.067          9.772                              0.905      8.972
+Groundtruth       -      -              0.503  0.680                       8.973                -               -          -
+MLD [52]                                       0.675  0.778 0.232          9.761              2.192             -          -
+MDM [53]        0.197  9.772            0.424                              9.519              1.907             -          -
+T2M [54]          -      -              0.390  0.649  0.729 1.501                             1.482             -          -
+MotionGPT [55]    -      -                     0.609                       11.08              2.328
+TM2T [56]                                 -             -         0.197    10.80              3.292           0.304      9.087
+TMOS [8]        0.182  9.671            0.370    -                         10.85              0.532
+T2M-GPT [57]                            0.366  0.569  0.722 3.734          10.91              1.570           0.031      11.08
+Ours            0.031  11.08            0.280  0.558                       10.35              3.714             -          -
+                  -      -              0.353  0.463  0.775 0.116          9.473                                -          -
+                  -      -              0.416  0.561                       10.84                                -          -
+                  -      -              0.397  0.627  0.782 0.082          10.92                                -          -
+                  -      -                     0.611                       10.98                                -          -
+                  -      -                                 KIT-ML                                               -          -
+                  -      -                                                                                      -          -
+                  -      -                            0.779 0.031
+                                                                                                              0.383      14.92
+                0.218  13.11                          0.734 0.404
+
+                                                      0.396 0.497
+
+                                                      0.693 2.770
+
+                                                      0.680 0.510
+
+                                                      0.587 3.599
+
+                                                      0.687 3.717
+
+                                                      0.745 0.514
+
+                                                      0.762 0.392
+
+intermediate representations for various human motion tasks.                                            TABLE III
+Petrovich et al. [8] presented TEMOS, a model for human            EVALUATION OF KPG AND EXTENDED-KPG ON HUMANML3D FOR
+motion generation that combines a text encoder with a varia-
+tional autoencoder model. Zhang et al. [57] proposed a simple                                VARIOUS SOTA METHODS.
+model that employs a vector quantized-variational autoencoder
+(VQ-VAE) and a generative pre-trained transformer (GPT) for        Method              KPG [4]                Extended KPG (ours)
+human motion generation from text.
+                                                                  MDM [53]           Acc. % ()  Diversity ()  Acc. % ()  Diversity ()
+D. State-of-the-Art Comparisons                                   MLD [52]              40.40        5.725       40.40        5.725
+                                                                  T2M-GPT [57]          44.76        5.901       44.76        5.901
+Quantitative Evaluation. We evaluated the performance of          KP-VAE [4]            47.86        6.593       47.86        6.593
+the proposed method on HumanML3D and KIT-ML test sets             Ours                  52.14        6.017         -            -
+using FID, diversity, R-Precision, and multimodality metrics.                           48.29        5.962       73.26        8.390
+The results are presented in Table. II. Qualitative results
+for the baseline methods were collected from the respective       improvement on the extended KPG with a prompt accuracy
+published articles. It is evident from the table that our method  of 73.26%.
+outperforms all other methods on HumanML3D by signifi-
+cantly reducing the FID score for the motion interpolation        Qualitative Evaluation. We performed a qualitative evalua-
+task. However, it attained a comparable score for diversity,      tion by visually comparing the motion sequences generated
+along with [55] for the same. For motion generation, our          by the proposed method with the groundtruth and various
+method excels in all aspects of evaluation, with [55] and [57]    baseline methods. Fig. 5 shows the qualitative evaluation on
+being good competitors. We report a significant reduction in      sample text prompt "a person is playing jumprope" from the
+FID scores and improvement in R-Precision and diversity,          HumanML3D dataset. In this sequence, the character stretches
+while maintaining closeness to the groundtruth scores on the      the arms holding the rope and jumps in uniform intervals
+KIT-ML dataset for the three tasks. Moreover, for motion          while swinging his arms. For a precise visual audit and motion
+prediction, the proposed method surpasses on both datasets.       diversity examination, we re-targeted motion sequences to the
+                                                                  SMPL model in the Unity3D rendering engine environment.
+   Furthermore, we evaluated the KPG and our extended             It is apparent that our method outperformed the other three
+version against various SOTA methods, as presented in             approaches and remained closer to the ground truth. How-
+Table. III. Once again, our method attained a significant         ever, [52] produces out of sequence poses during motion, as
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024                                                                   10
+
+                                                                                   the action semantics into kinematic cues of body parts.
+
+Fig. 5. Qualitative results for a sample text prompt "a person is playing          Perceptual User Study. It is important to note that quanti-
+jumprope". From left to right shows the motion representing the groundtruth,       tative and qualitative analyses alone are insufficient due to
+results from [52], results from [53], results from [57], and results generated by  the intricacies of the problem at hand. To obtain a more
+our method. The red dotted circles highlight the regions with invalid motion.      comprehensive understanding of motion quality, we conducted
+                                                                                   two user perceptual studies. These studies evaluate human
+                                                                                   preference in terms of motion semantics consistency (text-to-
+                                                                                   motion correspondence) and naturalness (realism). We sam-
+                                                                                   pled 30 participants with normal vision and divided them into
+                                                                                   two groups. For the first study, we presented the first group
+                                                                                   with a sample of motions (with a randomly swapped order
+                                                                                   in each display) and a description of the motion and asked
+                                                                                   the users, "Which motion corresponds better to the textual
+                                                                                   description?". For the second study, we asked the other group,
+                                                                                   "Which motion is more realistic?" without showing them the
+                                                                                   text description. Each sample comprised motion sequences
+                                                                                   representing the goundtruth, results from [52], results from
+                                                                                   [55], results from [4], results from [57], and results from the
+                                                                                   proposed model. For both studies, participants were asked to
+                                                                                   answer each query as per their preference, ranging from '1'
+                                                                                   (least natural) to '5' (most natural) for Study 1 and ranging
+                                                                                   from '1' (least plausible) to '5' (most plausible) for Study 2.
+                                                                                   User preferences for the different methods on a Likert scale
+                                                                                   are reported in Fig. 8.
+
+                                                                                   E. Ablation Study
+
+                                                                                   To assess the effectiveness of the proposed method and its
+                                                                                   constituent modules, we conducted an ablation study. Various
+                                                                                   combinations of FQT sets have been adopted to assess the
+                                                                                   potential of each FQT in conveying action semantics. We
+                                                                                   setup following four FQT sets:
+
+                                                                                   F1. considers FJAT, FPAT, FJDT, and FRDT.
+                                                                                   F2. considers FDT, FPRDT, and FPDT.
+                                                                                   F3. considers FLAT, FLOT, and FJVT.
+
+Fig. 6. Sample of learned membership functions.                                       The results of the ablation study are presented in Ta-
+                                                                                   ble. IV. The experiments reveal that optimal performance is
+indicated by the red circle. The [53] produces a favorable                         achieved when using the union of all FQT sets, resulting
+sequence but still damages the realism of the sequence by                          in an accuracy improvement of 28.19%. It is worth noting
+producing overly bent arms. While [57] is competitive and                          that pose-centric tokens, including FJAT, FPAT, FJDT, and
+remained closer to the groundtruth for most of the sequence,                       FRDT, contribute significantly in conveying action semantics
+it still produced incorrect arm bending during the initial                         compared to motion-centric tokens such as FDT, FPRDT,
+frame. The body parts highlighted by the red circle pertain                        FPDT, FLAT, FLOT, and FJVT. When used independently,
+to incorrect localization that compromises the realism and                         the pose-centric tokens provide an improvement in accuracy
+dynamics of the motion sequence. Moreover, existing SOTA                           of 13.42%. Furthermore, the angular and velocity tokens,
+methods often struggle during complex motions and elevate                          including FLAT, FLOT, and FJVT, contribute better than FDT,
+motion discontinuities. This is attributed to the use of poor mo-                  FPRDT, and FPDT. This underscores the crucial role of FQTs
+tion representations during training. In contrast, the proposed                    in conveying action semantics and providing effective motion
+FQTs provide fine-grained motion representation throughout                         representation.
+the motion sequence.
+                                                                                                            VII. CONCLUSION
+   We also present a modification sample in Fig. 7. By
+modifying the FQTs, we can edit arbitrary motion at a                              In this study, we address the long-standing challenge of bridg-
+fine-grained level. Our method responds appropriately to text                      ing raw human motion and action semantics via fuzzy qual-
+prompts with constraints on specific body parts. This could                        itative kinematics. By combining fuzzy logic and qualitative
+be attributed to FQT mediation, which explicitly decomposes                        kinematic reasoning, we proposed a novel fine-grained motion
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024  11
+
+Fig. 7. Our model enables fine-grained motion modification by making
+modifications to FQT. Purple and orange shaded areas indicate kinematic
+constraints applied on right and left arms, respectively.
+
+                       TABLE IV                                          Fig. 8. User perceptual study: (left) User preference scores for motion
+ABLATION STUDY WITH DIFFERENT FQT SETS.                                  semantic consistency of our method compared with various SOTA method.
+                                                                         Our approach significantly outperforms SOTA methods. Notably, [55] and [4]
+Method                   Accuracy % ()  Diversity ()                     remained competitive. (right) User preference scores for motion naturalness,
+w/o FQTs                       45.07         3.280                       showing that our method again excels in user preference. The red line indicates
+w F1                           58.49         5.744                       the 50% preference level.
+w F2                           52.76         4.862
+w F3                           54.64         5.281                       (3) Introducing more qualitative tokens can capture hidden
+w (F1  F2)                     61.71         6.097                       connections between various components of kinematic
+w (F1  F3)                     67.25         6.810                       hierarchies, providing a more comprehensive representation.
+w (F2  F3)                     56.14         5.908                       (4) Some elements of the fuzzy linguistic vocabulary may
+Ours (F1  F2  F3)              73.26         8.390                       cause ambiguities during translation. Developing an improved
+w = with, w/o = without                                                  translation strategy can address these challenges.
+
+representation known as FQTs. These FQTs model expressive                                            REFERENCES
+pose geometry, rich motion dynamics, and trigonometric un-
+certainties throughout the motion sequence. Moreover, FQTs               [1] Y. Wang, Z. Leng, F. W. B. Li, S. Wu, and X. Liang, "Fg-t2m: Fine-
+go beyond boolean kinematic facts by incorporating changes in                 grained text-driven human motion generation via diffusion model," in
+directions, amplitudes, and velocities across different motion                IEEE/CVF International Conference on Computer Vision, ICCV 2023,
+components. The adoption of fuzzy qualitative kinematics not                  Paris, France, October 1-6, 2023. IEEE, 2023, pp. 21 978­21 987.
+only advances theoretical knowledge but also holds promise                    [Online]. Available: https://doi.org/10.1109/ICCV51070.2023.02014
+for numerous practical applications. The rigorous evaluation
+against SOTA methods underscores the superiority in motion               [2] Y. Liu, H. Zhang, Y. Li, K. He, and D. Xu, "Skeleton-
+quality, diversity, multimodality, text-motion correspondence,                based human action recognition via large-kernel attention graph
+motion realism, and effective disclosure of motion semantics.                 convolutional network," IEEE Transactions on Visualization and
+Furthermore, a unified motion understanding system was pro-                   Computer Graphics, vol. 29, no. 5, pp. 2575­2585, 2023. [Online].
+posed to demonstrate the effectiveness of our approach in var-                Available: https://doi.org/10.1109/TVCG.2023.3247075
+ious motion tasks, including motion interpolation, prediction,
+and generation. Moreover, our extended kinematic prompts                 [3] Y. Moullec, M. Cogne´, J. Saint-Aubert, and A. Le´cuyer, "Assisted
+have proven to be more effective in expressing human motion                   walking-in-place: Introducing assisted motion to walking-by-cycling
+in natural language. To this end, we believe that FQTs have                   in embodied virtual reality," IEEE Transactions on Visualization and
+great potential for advancing human motion understanding.                     Computer Graphics, vol. 29, no. 5, pp. 2796­2805, 2023. [Online].
+                                                                              Available: https://doi.org/10.1109/TVCG.2023.3247070
+           VIII. LIMITATIONS AND FUTURE WORK
+                                                                         [4] X. Liu, Y. Li, A. Zeng, Z. Zhou, Y. You, and C. Lu, "Bridging
+While fuzzy qualitative kinematics presents improved                          the gap between human motion and action semantics via kinematic
+representations of intermediate motion, there is still room                   phrases," CoRR, vol. abs/2310.04189, 2023. [Online]. Available:
+for improvement. (1) Increasing the fuzzy vocabulary by                       https://doi.org/10.48550/arXiv.2310.04189
+expanding the number of overlapping fuzzy intervals may
+compromise the intuitiveness of textual prompts. This                    [5] L. Xu, Z. Song, D. Wang, J. Su, Z. Fang, C. Ding, W. Gan,
+expansion complicates the learning process by widening the                    Y. Yan, X. Jin, X. Yang, W. Zeng, and W. Wu, "Actformer:
+text prompt space. (2) Including additional motion attributes                 A gan-based transformer towards general action-conditioned 3d
+beyond distance, angle, and velocity has the potential to                     human motion generation," in IEEE/CVF International Conference
+further enrich the semantics of fuzzy qualitative kinematics.                 on Computer Vision, ICCV 2023, Paris, France, October 1-6,
+                                                                              2023. IEEE, 2023, pp. 2228­2238. [Online]. Available: https:
+                                                                              //doi.org/10.1109/ICCV51070.2023.00212
+
+                                                                         [6] M. Loper, N. Mahmood, J. Romero, G. Pons-Moll, and M. J. Black,
+                                                                              "SMPL: A skinned multi-person linear model," ACM Trans. Graphics
+                                                                              (Proc. SIGGRAPH Asia), vol. 34, no. 6, pp. 248:1­248:16, Oct. 2015.
+
+                                                                         [7] T. Hu, H. Xu, L. Luo, T. Yu, Z. Zheng, H. Zhang, Y. Liu, and
+                                                                              M. Zwicker, "Hvtr++: Image and pose driven human avatars using hy-
+                                                                              brid volumetric-textural rendering," IEEE Transactions on Visualization
+                                                                              and Computer Graphics, 2023.
+
+                                                                         [8] M. Petrovich, M. J. Black, and G. Varol, "TEMOS: generating diverse
+                                                                              human motions from textual descriptions," in Computer Vision -
+                                                                              ECCV 2022 - 17th European Conference, Tel Aviv, Israel, October
+                                                                              23-27, 2022, Proceedings, Part XXII, ser. Lecture Notes in Computer
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024       12
+
+      Science, vol. 13682. Springer, 2022, pp. 480­497. [Online]. Available:          17-24, 2023. IEEE, 2023, pp. 14 730­14 740. [Online]. Available:
+      https://doi.org/10.1007/978-3-031-20047-2\ 28                                   https://doi.org/10.1109/CVPR52729.2023.01415
+ [9] H. Wang, E. S. L. Ho, H. P. H. Shum, and Z. Zhu, "Spatio-                  [26] D. K. Jain, M. Zareapoor, R. Jain, A. Kathuria, and S. Bachhety,
+      temporal manifold learning for human motions via long-horizon                   "Gan-poser: an improvised bidirectional GAN model for human motion
+      modeling," IEEE Transactions on Visualization and Computer Graphics,            prediction," Neural Comput. Appl., vol. 32, no. 18, pp. 14 579­14 591,
+      vol. 27, no. 1, pp. 216­227, 2021. [Online]. Available: https:                  2020. [Online]. Available: https://doi.org/10.1007/s00521-020-04941-4
+      //doi.org/10.1109/TVCG.2019.2936810                                       [27] A. Shiobara and M. Murakami, "Human motion generation using
+[10] G. Pons-Moll, D. J. Fleet, and B. Rosenhahn, "Posebits for monocular             wasserstein gan," in Proceedings of the 2021 5th International
+      human pose estimation," in 2014 IEEE Conference on Computer Vision              Conference on Digital Signal Processing, ser. ICDSP '21. New York,
+      and Pattern Recognition, CVPR 2014, Columbus, OH, USA, June                     NY, USA: Association for Computing Machinery, 2021, p. 278­282.
+      23-28, 2014. IEEE Computer Society, 2014, pp. 2345­2352. [Online].              [Online]. Available: https://doi.org/10.1145/3458380.3458428
+      Available: https://doi.org/10.1109/CVPR.2014.300                          [28] Y. Wang, Z. Leng, F. W. Li, S.-C. Wu, and X. Liang, "Fg-t2m: Fine-
+[11] G. Delmas, P. Weinzaepfel, T. Lucas, F. Moreno-Noguer, and G. Rogez,             grained text-driven human motion generation via diffusion model," in
+      "Posescript: 3d human poses from natural language," in Computer                 Proceedings of the IEEE/CVF International Conference on Computer
+      Vision - ECCV 2022 - 17th European Conference, Tel Aviv, Israel,                Vision, 2023, pp. 22 035­22 044.
+      October 23-27, 2022, Proceedings, Part VI, ser. Lecture Notes in          [29] K. Karunratanakul, K. Preechakul, S. Suwajanakorn, and S. Tang,
+      Computer Science, vol. 13666. Springer, 2022, pp. 346­362. [Online].            "Guided motion diffusion for controllable human motion synthesis," in
+      Available: https://doi.org/10.1007/978-3-031-20068-7\ 20                        Proceedings of the IEEE/CVF International Conference on Computer
+[12] M. S. Islam, K. Bakhat, M. Iqbal, R. Khan, Z. Ye, and M. M. Islam,               Vision, 2023, pp. 2151­2162.
+      "Representation for action recognition with motion vector termed as:      [30] W. Yin, H. Yin, D. Kragic, and M. Bjo¨rkman, "Graph-based
+      SDQIO," Expert Syst. Appl., vol. 212, p. 118406, 2023. [Online].                normalizing flow for human motion generation and reconstruction,"
+      Available: https://doi.org/10.1016/j.eswa.2022.118406                           in 30th IEEE International Conference on Robot & Human
+[13] W. Zhu, X. Ma, D. Ro, H. Ci, J. Zhang, J. Shi, F. Gao, Q. Tian, and              Interactive Communication, RO-MAN 2021, Vancouver, BC, Canada,
+      Y. Wang, "Human motion generation: A survey," IEEE Transactions on              August 8-12, 2021. IEEE, 2021, pp. 641­648. [Online]. Available:
+      Pattern Analysis and Machine Intelligence, 2023.                                https://doi.org/10.1109/RO-MAN50785.2021.9515316
+[14] M. Liu and Y. Zhang, "Gmnet: an action recognition network                 [31] Y. Yuan and K. Kitani, "Dlow: Diversifying latent flows for diverse
+      with global motion representation," Int. J. Mach. Learn. Cybern.,               human motion prediction," in Computer Vision - ECCV 2020 -
+      vol. 14, no. 5, pp. 1683­1693, 2023. [Online]. Available: https:                16th European Conference, Glasgow, UK, August 23-28, 2020,
+      //doi.org/10.1007/s13042-022-01720-6                                            Proceedings, Part IX, ser. Lecture Notes in Computer Science,
+[15] Y. Qi, C. Pang, Y. Liu, and L. Lyu, "Multi-stream global-local                   vol. 12354. Springer, 2020, pp. 346­364. [Online]. Available:
+      motion fusion network for skeleton-based action recognition," Appl.             https://doi.org/10.1007/978-3-030-58545-7\ 20
+      Soft Comput., vol. 145, p. 110536, 2023. [Online]. Available:             [32] C. Liu and Y. Mu, "Searching motion graphs for human motion
+      https://doi.org/10.1016/j.asoc.2023.110536                                      synthesis," in MM '21: ACM Multimedia Conference, Virtual Event,
+[16] N. Battan, Y. Agrawal, S. S. Rao, A. Goel, and A. Sharma,                        China, October 20 - 24, 2021. ACM, 2021, pp. 871­879. [Online].
+      "Glocalnet: Class-aware long-term human motion synthesis," in IEEE              Available: https://doi.org/10.1145/3474085.3475264
+      Winter Conference on Applications of Computer Vision, WACV 2021,          [33] K. Chen, Z. Tan, J. Lei, S. Zhang, Y. Guo, W. Zhang, and S. Hu,
+      Waikoloa, HI, USA, January 3-8, 2021. IEEE, 2021, pp. 878­887.                  "Choreomaster: choreography-oriented music-driven dance synthesis,"
+      [Online]. Available: https://doi.org/10.1109/WACV48630.2021.00092               ACM Trans. Graph., vol. 40, no. 4, pp. 145:1­145:13, 2021. [Online].
+[17] H. Liu, G. M. Coghill, and D. P. Barnes, "Fuzzy qualitative                      Available: https://doi.org/10.1145/3450626.3459932
+      trigonometry," Int. J. Approx. Reason., vol. 51, no. 1, pp. 71­88, 2009.  [34] P. Cervantes, Y. Sekikawa, I. Sato, and K. Shinoda, "Implicit neural
+      [Online]. Available: https://doi.org/10.1016/j.ijar.2009.07.003                 representations for variable length human motion generation," in
+[18] I. Loi, E. I. Zacharaki, and K. Moustakas, "Machine learning approaches          Computer Vision - ECCV 2022 - 17th European Conference, Tel Aviv,
+      for 3d motion synthesis and musculoskeletal dynamics estimation: A              Israel, October 23-27, 2022, Proceedings, Part XVII, ser. Lecture
+      survey," IEEE Transactions on Visualization and Computer Graphics,              Notes in Computer Science, vol. 13677. Springer, 2022, pp. 356­372.
+      2023.                                                                           [Online]. Available: https://doi.org/10.1007/978-3-031-19790-1\ 22
+[19] D. Holden, O. Kanoun, M. Perepichka, and T. Popa, "Learned motion          [35] X. Gao, Y. Yang, Z. Xie, S. Du, Z. Sun, and Y. Wu, "Guess: Gradually
+      matching," ACM Trans. Graph., vol. 39, no. 4, p. 53, 2020. [Online].            enriching synthesis for text-driven human motion generation," IEEE
+      Available: https://doi.org/10.1145/3386569.3392440                              Transactions on Visualization and Computer Graphics, 2024.
+[20] A. Aristidou, D. Cohen-Or, J. K. Hodgins, Y. Chrysanthou,                  [36] A. Aristidou, A. Yiannakidis, K. Aberman, D. Cohen-Or, A. Shamir,
+      and A. Shamir, "Deep motifs and motion signatures," ACM                         and Y. Chrysanthou, "Rhythm is a dancer: Music-driven motion
+      Trans. Graph., vol. 37, no. 6, p. 187, 2018. [Online]. Available:               synthesis with global structure," IEEE Transactions on Visualization
+      https://doi.org/10.1145/3272127.3275038                                         and Computer Graphics, vol. 29, no. 8, pp. 3519­3534, 2023. [Online].
+[21] X. Liu, Y. Li, A. Zeng, Z. Zhou, Y. You, and C. Lu, "Bridging                    Available: https://doi.org/10.1109/TVCG.2022.3163676
+      the gap between human motion and action semantics via kinematic           [37] G. Sun, Y. Wong, Z. Cheng, M. S. Kankanhalli, W. Geng, and X. Li,
+      phrases," CoRR, vol. abs/2310.04189, 2023. [Online]. Available:                 "Deepdance: Music-to-dance motion choreography with adversarial
+      https://doi.org/10.48550/arXiv.2310.04189                                       learning," IEEE Transactions on Multimedia, vol. 23, pp. 497­509,
+[22] W. Zhu, X. Ma, D. Ro, H. Ci, J. Zhang, J. Shi, F. Gao, Q. Tian,                  2021. [Online]. Available: https://doi.org/10.1109/TMM.2020.2981989
+      and Y. Wang, "Human motion generation: A survey," CoRR, vol.              [38] Z. Cao, H. Gao, K. Mangalam, Q. Cai, M. Vo, and J. Malik,
+      abs/2307.10894, 2023. [Online]. Available: https://doi.org/10.48550/            "Long-term human motion prediction with scene context," in Computer
+      arXiv.2307.10894                                                                Vision - ECCV 2020 - 16th European Conference, Glasgow, UK, August
+[23] C. Zhong, L. Hu, Z. Zhang, and S. Xia, "Learning uncoupled-                      23-28, 2020, Proceedings, Part I, ser. Lecture Notes in Computer
+      modulation CVAE for 3d action-conditioned human motion synthesis,"              Science, vol. 12346. Springer, 2020, pp. 387­404. [Online]. Available:
+      in Computer Vision - ECCV 2022 - 17th European Conference, Tel                  https://doi.org/10.1007/978-3-030-58452-8\ 23
+      Aviv, Israel, October 23-27, 2022, Proceedings, Part XXI, ser. Lecture    [39] J. Wang, H. Xu, J. Xu, S. Liu, and X. Wang, "Synthesizing long-term
+      Notes in Computer Science, vol. 13681. Springer, 2022, pp. 716­732.             3d human motion and interaction in 3d scenes," in Proceedings of the
+      [Online]. Available: https://doi.org/10.1007/978-3-031-19803-8\ 42              IEEE/CVF Conference on Computer Vision and Pattern Recognition,
+[24] C. Guo, X. Zuo, S. Wang, S. Zou, Q. Sun, A. Deng, M. Gong,                       2021, pp. 9401­9411.
+      and L. Cheng, "Action2motion: Conditioned generation of 3d human          [40] Z. Wang, J. Chai, and S. Xia, "Combining recurrent neural
+      motions," in MM '20: The 28th ACM International Conference                      networks and adversarial training for human motion synthesis
+      on Multimedia, Virtual Event / Seattle, WA, USA, October 12-16,                 and control," IEEE Transactions on Visualization and Computer
+      2020. ACM, 2020, pp. 2021­2029. [Online]. Available: https:                     Graphics, vol. 27, no. 1, pp. 14­28, 2021. [Online]. Available:
+      //doi.org/10.1145/3394171.3413635                                               https://doi.org/10.1109/TVCG.2019.2938520
+[25] J. Zhang, Y. Zhang, X. Cun, Y. Zhang, H. Zhao, H. Lu, X. Shen,             [41] J. Shi, J. Zhong, and W. Cao, "Multi-semantics aggregation network
+      and S. Ying, "Generating human motion from textual descriptions with            based on the dynamic-attention mechanism for 3d human motion pre-
+      discrete representations," in IEEE/CVF Conference on Computer Vision            diction," IEEE Transactions on Multimedia, pp. 1­13, 2023.
+      and Pattern Recognition, CVPR 2023, Vancouver, BC, Canada, June           [42] C. Gu, S. Zhao, and C. Zhang, "Diversity-promoting human motion
+                                                                                      interpolation via conditional variational auto-encoder," in International
+JOURNAL OF IEEE TRANSACTIONS ON FUZZY SYSTEMS, VOL. 32, NO. 3, MARCH 2024        13
+
+      Workshop on Advanced Imaging Technology (IWAIT) 2022, vol. 12177.                                         Ali Asghar Manjotho received his master's de-
+      SPIE, 2022, pp. 688­692.                                                                                  gree in Information Technology from the Mehran
+[43] J. F. M. Jr. and D. Manocha, "PACE: data-driven virtual agent                                              University of Engineering and Technology (MUET),
+      interaction in dense and cluttered environments," IEEE Transactions on                                    Jamshoro, Pakistan. He is currently pursuing his
+      Visualization and Computer Graphics, vol. 29, no. 5, pp. 2536­2546,                                       Ph.D. degree at the School of Computer Science
+      2023. [Online]. Available: https://doi.org/10.1109/TVCG.2023.3247054                                      and Information Technology, Beijing Institute of
+[44] W. Song, X. Jin, S. Li, C. Chen, A. Hao, and X. Hou, "Finestyle:                                           Technology, China. He is currently affiliated with
+      Semantic-aware fine-grained motion style transfer with dual interactive-                                  the Department of Computer Systems Engineering,
+      flow fusion," IEEE Transactions on Visualization and Computer                                             MUET, Pakistan, as an Assistant Professor. His cur-
+      Graphics, vol. 29, no. 11, pp. 4361­4371, 2023. [Online]. Available:                                      rent research interests focus human behavior under-
+      https://doi.org/10.1109/TVCG.2023.3320216                                                                 stand and human­computer interaction in AR/VR.
+[45] B. Ji, Y. Pan, Y. Yan, R. Chen, and X. Yang, "Stylevr: Stylizing character
+      animations with normalizing flows," IEEE Transactions on Visualization                                    Tekie Tsegay Tewolde is a Ph.D. candidate at the
+      and Computer Graphics, 2023.                                                                              Computer Science and Technology, Beijing Institute
+[46] C. Guo, S. Zou, X. Zuo, S. Wang, W. Ji, X. Li, and L. Cheng,                                               of Technology. He received his MSc. in Information
+      "Generating diverse and natural 3d human motions from text," in                                           Technology from the University of Madras, India
+      Proceedings of the IEEE/CVF Conference on Computer Vision and                                             in 2012, and his BSc. in Computer Engineering
+      Pattern Recognition (CVPR), June 2022, pp. 5152­5161.                                                     from the Eritrea Institute of Technology in 2009. His
+[47] M. Plappert, C. Mandery, and T. Asfour, "The KIT motion-language                                           current research focuses on 3D hand pose estimation
+      dataset," Big Data, vol. 4, no. 4, pp. 236­252, 2016. [Online].                                           using computer vision and deep learning.
+      Available: https://doi.org/10.1089/big.2016.0028
+[48] Y. Cai, Y. Wang, Y. Zhu, T. Cham, J. Cai, J. Yuan, J. Liu, C. Zheng,                                       Zhendong Niu received his Ph.D. degree in Com-
+      S. Yan, H. Ding, X. Shen, D. Liu, and N. Magnenat-Thalmann, "A                                            puter Science from the Beijing Institute of Technol-
+      unified 3d human motion synthesis model via conditional variational                                       ogy, China, in 1995. He completed his postdoctorate
+      auto-encoder ," in 2021 IEEE/CVF International Conference on                                              from the University of Pittsburgh, Pennsylvania in
+      Computer Vision, ICCV 2021, Montreal, QC, Canada, October                                                 1988. He is a distinguished professor at the School
+      10-17, 2021. IEEE, 2021, pp. 11 625­11 635. [Online]. Available:                                          of Computer Science and Technology, Beijing In-
+      https://doi.org/10.1109/ICCV48922.2021.01144                                                              stitute of Technology, China. He also served as a
+[49] Y. Zhai, M. Huang, T. Luan, L. Dong, I. Nwogu, S. Lyu, D. S.                                               researcher and adjunct faculty member at Carnegie
+      Doermann, and J. Yuan, "Language-guided human motion synthesis                                            Mellon University, Pennsylvania, from 1999 to 2004.
+      with atomic actions," in Proceedings of the 31st ACM International                                        His research interests include informational retrieval,
+      Conference on Multimedia, MM 2023, Ottawa, ON, Canada, 29                                                 software architecture, digital libraries, and web-
+      October 2023- 3 November 2023. ACM, 2023, pp. 5262­5271.                   based learning techniques.
+      [Online]. Available: https://doi.org/10.1145/3581783.3612289
+[50] V. Sanh, L. Debut, J. Chaumond, and T. Wolf, "Distilbert, a distilled
+      version of BERT: smaller, faster, cheaper and lighter," CoRR, vol.
+      abs/1910.01108, 2019. [Online]. Available: http://arxiv.org/abs/1910.
+      01108
+[51] D. P. Kingma and M. Welling, "Auto-encoding variational bayes," in
+      2nd International Conference on Learning Representations, ICLR 2014,
+      Banff, AB, Canada, April 14-16, 2014, Conference Track Proceedings,
+      2014. [Online]. Available: http://arxiv.org/abs/1312.6114
+[52] X. Chen, B. Jiang, W. Liu, Z. Huang, B. Fu, T. Chen, and
+      G. Yu, "Executing your commands via motion diffusion in latent
+      space," in IEEE/CVF Conference on Computer Vision and Pattern
+      Recognition, CVPR 2023, Vancouver, BC, Canada, June 17-24,
+      2023. IEEE, 2023, pp. 18 000­18 010. [Online]. Available: https:
+      //doi.org/10.1109/CVPR52729.2023.01726
+[53] G. Tevet, S. Raab, B. Gordon, Y. Shafir, D. Cohen-Or, and
+      A. H. Bermano, "Human motion diffusion model," in The Eleventh
+      International Conference on Learning Representations, ICLR 2023,
+      Kigali, Rwanda, May 1-5, 2023. OpenReview.net, 2023. [Online].
+      Available: https://openreview.net/pdf?id=SJ1kSyO2jwu
+[54] C. Guo, S. Zou, X. Zuo, S. Wang, W. Ji, X. Li, and L. Cheng,
+      "Generating diverse and natural 3d human motions from text," in
+      IEEE/CVF Conference on Computer Vision and Pattern Recognition,
+      CVPR 2022, New Orleans, LA, USA, June 18-24, 2022. IEEE,
+      2022, pp. 5142­5151. [Online]. Available: https://doi.org/10.1109/
+      CVPR52688.2022.00509
+[55] B. Jiang, X. Chen, W. Liu, J. Yu, G. Yu, and T. Chen, "Motiongpt:
+      Human motion as a foreign language," CoRR, vol. abs/2306.14795,
+      2023. [Online]. Available: https://doi.org/10.48550/arXiv.2306.14795
+[56] C. Guo, X. Zuo, S. Wang, and L. Cheng, "TM2T: stochastic and
+      tokenized modeling for the reciprocal generation of 3d human motions
+      and texts," in Computer Vision - ECCV 2022 - 17th European
+      Conference, Tel Aviv, Israel, October 23-27, 2022, Proceedings,
+      Part XXXV, ser. Lecture Notes in Computer Science, vol. 13695.
+      Springer, 2022, pp. 580­597. [Online]. Available: https://doi.org/10.
+      1007/978-3-031-19833-5\ 34
+[57] J. Zhang, Y. Zhang, X. Cun, S. Huang, Y. Zhang, H. Zhao, H. Lu,
+      and X. Shen, "T2M-GPT: generating human motion from textual
+      descriptions with discrete representations," CoRR, vol. abs/2301.06052,
+      2023. [Online]. Available: https://doi.org/10.48550/arXiv.2301.06052
+

@@ -1,0 +1,162 @@
+{
+  "paper_id": "motion-generation-paper",
+  "metadata": {
+    "title": "Connecting Action Semantics and Human Motion using Fuzzy Qualitative Kinematics",
+    "authors": [
+      {
+        "name": "Ali Asghar Manjotho",
+        "emails": ["ali.manjotho@bit.edu.cn"]
+      },
+      {
+        "name": "Tekie Tsegay Tewolde",
+        "emails": ["tekie.tsegay@bit.edu.cn"]
+      },
+      {
+        "name": "Zhendong Niu",
+        "emails": ["zniu@bit.edu.cn"],
+        "corresponding_author": true
+      }
+    ],
+    "affiliations": [
+      "School of Computer Science and Technology, Beijing Institute of Technology, China"
+    ],
+    "venue": "IEEE Transactions on Fuzzy Systems",
+    "publication": {
+      "year": 2024,
+      "month": "March",
+      "volume": "32",
+      "issue": "3"
+    },
+    "keywords": [
+      "Human motion generation",
+      "automated animations",
+      "motion semantics",
+      "fuzzy reasoning",
+      "qualitative kinematics"
+    ]
+  },
+  "abstract": "The paper proposes fuzzy qualitative kinematics (FQK) and fuzzy qualitative tokens (FQTs) to bridge raw human motion and action semantics, and evaluates a unified motion understanding system across interpolation, prediction, generation, and prompt-related tasks on HumanML3D and KIT-ML.",
+  "section_order": [
+    {"index": 1, "id": "SEC-001", "title": "Introduction"},
+    {"index": 2, "id": "SEC-002", "title": "Related Work"},
+    {"index": 3, "id": "SEC-003", "title": "Method"},
+    {"index": 4, "id": "SEC-004", "title": "Implementation Details"},
+    {"index": 5, "id": "SEC-005", "title": "Kinematic Prompt Generation"},
+    {"index": 6, "id": "SEC-006", "title": "Experiments"},
+    {"index": 7, "id": "SEC-007", "title": "Conclusion"},
+    {"index": 8, "id": "SEC-008", "title": "Limitations and Future Work"}
+  ],
+  "sections": [
+    {
+      "id": "SEC-001",
+      "title": "Introduction",
+      "anchor": "p1-introduction",
+      "summary": "Motivates the semantic gap between raw motion and action semantics and introduces fuzzy qualitative tokens as an intermediate representation.",
+      "evidence_anchors": ["p1-abstract", "p1-introduction", "p2-contributions"]
+    },
+    {
+      "id": "SEC-002",
+      "title": "Related Work",
+      "anchor": "p2-related-work",
+      "summary": "Covers prior motion representations and motion generation methods, with emphasis on intermediate representations.",
+      "evidence_anchors": ["p2-related-representation", "p2-related-generation"]
+    },
+    {
+      "id": "SEC-003",
+      "title": "Method",
+      "anchor": "p3-method",
+      "summary": "Defines fuzzy vocabularies, membership functions, 11 FQT families, the token extractor, and a unified motion model.",
+      "evidence_anchors": ["p3-linguistic-vocabulary", "p4-fqt-definitions", "p6-danfi", "p7-unified-model"]
+    },
+    {
+      "id": "SEC-004",
+      "title": "Implementation Details",
+      "anchor": "p7-implementation",
+      "summary": "Reports training schedule, optimizer, latent size, hardware, and task-specific inference setup.",
+      "evidence_anchors": ["p7-implementation"]
+    },
+    {
+      "id": "SEC-005",
+      "title": "Kinematic Prompt Generation",
+      "anchor": "p8-kpg",
+      "summary": "Converts FQTs into text prompts intended to improve interpretability and fine-grained motion control.",
+      "evidence_anchors": ["p8-kpg", "p8-table1"]
+    },
+    {
+      "id": "SEC-006",
+      "title": "Experiments",
+      "anchor": "p8-experiments",
+      "summary": "Benchmarks the method on HumanML3D and KIT-ML using quantitative, qualitative, perceptual, and ablation analyses.",
+      "evidence_anchors": ["p8-datasets", "p8-metrics", "p9-table2", "p9-table3", "p10-user-study", "p11-table4"]
+    },
+    {
+      "id": "SEC-007",
+      "title": "Conclusion",
+      "anchor": "p10-conclusion",
+      "summary": "Claims that FQTs improve motion quality, diversity, multimodality, and semantic expressiveness.",
+      "evidence_anchors": ["p10-conclusion"]
+    },
+    {
+      "id": "SEC-008",
+      "title": "Limitations and Future Work",
+      "anchor": "p11-limitations",
+      "summary": "Acknowledges vocabulary-size trade-offs, possible new attributes/tokens, and translation ambiguity.",
+      "evidence_anchors": ["p11-limitations"]
+    }
+  ],
+  "datasets": [
+    {"name": "HumanML3D", "section": "SEC-006"},
+    {"name": "KIT-ML", "section": "SEC-006"}
+  ],
+  "tasks": [
+    "motion interpolation",
+    "motion prediction",
+    "motion generation",
+    "kinematic prompt generation"
+  ],
+  "method_entities": {
+    "core_representation": ["FQK", "FQTs"],
+    "reported_token_families": [
+      "FLLAT",
+      "FJLAT",
+      "FJJAT",
+      "FJJDT",
+      "FLJDT",
+      "FLLDT",
+      "FJDT",
+      "FLDT",
+      "FLADT",
+      "FJVT",
+      "FLVT"
+    ],
+    "reported_auxiliary_components": ["FQTE", "D-ANFI"]
+  },
+  "parse_alerts": [
+    {
+      "severity": "critical",
+      "message": "Token labels used in Table I and the ablation section do not align with the formal token names defined in the method."
+    },
+    {
+      "severity": "major",
+      "message": "The paper states 11 FQTs in the method but says the extractor handles ten types elsewhere."
+    },
+    {
+      "severity": "major",
+      "message": "The manuscript contains an unresolved citation placeholder '[REF]'."
+    },
+    {
+      "severity": "major",
+      "message": "References include visible duplicates and inconsistent normalization."
+    },
+    {
+      "severity": "major",
+      "message": "Training/evaluation preprocessing rates conflict across sections (30Hz vs 15Hz)."
+    }
+  ],
+  "normalization_notes": [
+    "This enriched artifact is evidence-grounded from the provided PDF and retains uncertainty where the source paper is internally inconsistent.",
+    "Claims are summarized conservatively; unresolved notation and reference issues are preserved as parse alerts rather than silently corrected.",
+    "Reference extraction is intentionally partial because bibliography integrity problems are themselves part of the review evidence."
+  ],
+  "enriched_at": "2026-03-30T00:00:00.000Z"
+}
