@@ -33,7 +33,7 @@
 
 <table>
 <tr>
-<td width="50%">
+<td valign="top" width="50%">
   <div align="center">
     <b> Sample Paper for Review </b><br>
     <a href="assets/motion-generation-paper.pdf"><img src="assets/motion-generation-paper-thumbnail.png" alt="Sample Paper"/></a>
