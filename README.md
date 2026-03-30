@@ -178,6 +178,21 @@ opencode
 /batch-review Please review all research papers stored in papers/raw/ folder
 ```
 
+### 5. Audit Mode
+#### Write the following prompt in the opencode CLI:
+```bash
+/audit-paper Please audit the research paper my-paper.pdf stored in papers/raw/ folder
+```
+### 6. Compare Papers
+#### Write the following prompt in the opencode CLI:
+```bash
+/compare-papers Compare the papers my-paper-v1.pdf, my-paper-v2.pdf, and my-paper-v3.pdf stored in papers/raw/ folder
+```
+### 7. Compare Papers
+#### Write the following prompt in the opencode CLI:
+```bash
+/refresh-parsed my-paper-v2.pdf
+```
 
 
 ## 📊 Outputs
