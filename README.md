@@ -35,7 +35,7 @@
 <tr>
 <td valign="top" width="50%">
   <div align="center">
-    <b style="color: #1A73E8;"> Sample Paper for Review </b><br>
+    <b><div style="color: #1A73E8;"> Sample Paper for Review</div></b><br>
     <a href="assets/motion-generation-paper.pdf"><img src="assets/motion-generation-paper-thumbnail.png" height="500" alt="Sample Paper"/></a><br>
     <b>This is a real research paper sample, intentionally poisoned with invalid arguments, faulty references, misleading citations, and manipulated data to rigorously test OpenReviewer.</b>
   </div>
