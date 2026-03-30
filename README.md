@@ -71,6 +71,21 @@
   </div>
 </td>
 </tr>
+
+<tr>
+  <b></b>
+  <td valign="top" width="50%">
+    <div align="center">
+        <img src="assets/page-1.png"/>
+    </div>
+  </td>
+  <td valign="top">
+    <div align="center">    
+         <img src="assets/page-2.png"/>
+    </div>
+  </td>
+</tr>
+
 </table>
 
 
