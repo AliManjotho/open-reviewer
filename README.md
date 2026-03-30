@@ -207,9 +207,13 @@ opencode
 
 ## 🧠 Key Features
 ✅ Multi-agent orchestration
+
 ✅ Evidence-driven validation
+
 ✅ Citation integrity auditing
+
 ✅ Cross-section consistency analysis
+
 ✅ Explainable outputs with traceability
 
 
