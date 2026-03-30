@@ -71,6 +71,7 @@
         <video autoplay loop muted playsinline>
           <source src="assets/enriched.mp4" type="video/mp4">
         </video>
+       [![Enriched Metadata Extracted](assets/enriched.mp4)](assets/enriched.mp4)
       </a>
   </div>
 </td>
