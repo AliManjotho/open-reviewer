@@ -58,9 +58,7 @@
   <div align="center">
     <b>Issue-Evidence Map</b><br>
     <a href="papers/enriched/motion-generation-paper.enriched.json">
-      <video autoplay loop muted playsinline>
-        <source src="assets/issue-evidence.mp4" type="video/mp4">
-      </video>
+      <img src="assets/issue-evidence.gif"/>
     </a>
   </div>
 </td>
@@ -68,10 +66,7 @@
   <div align="center">
     <b>Enriched Metadata Extracted</b><br>
      <a href="reviews/json/motion-generation-paper.review.json">
-        <video autoplay loop muted playsinline>
-          <source src="assets/enriched.mp4" type="video/mp4">
-        </video>
-       ![Enriched Metadata Extracted](assets/enriched.mp4)
+       <img src="assets/enriched.gif"/>
       </a>
   </div>
 </td>
